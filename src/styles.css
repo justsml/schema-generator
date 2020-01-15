@@ -1,0 +1,21 @@
+.App {
+  font-family: sans-serif;
+  text-align: left;
+}
+
+.input-data,
+.output-data {
+  width: 90vw;
+  margin: 0 auto;
+}
+
+.output-data textarea,
+.input-data textarea {
+  width: 100%;
+  min-height: 33vh;
+}
+
+.btn-group {
+  text-align: center;
+  margin: 1.2rem;
+}
