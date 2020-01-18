@@ -3,6 +3,7 @@
   text-align: left;
 }
 
+.output-ui,
 .input-data,
 .output-data {
   width: 90vw;
@@ -15,7 +16,7 @@
   min-height: 33vh;
 }
 
-.btn-group {
-  text-align: center;
-  margin: 1.2rem;
+.output-ui select,
+.output-ui button {
+  max-width: 50%;
 }

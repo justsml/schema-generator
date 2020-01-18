@@ -1,10 +1,11 @@
 {
-  "name": "mongoose-schema-generator",
+  "name": "schema-generator-with-adapters",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "csv-parse": "4.8.5",
     "lodash.isdate": "4.0.1",
     "lodash.isnumber": "3.0.3",
     "react": "16.12.0",
