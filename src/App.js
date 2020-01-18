@@ -39,6 +39,7 @@ export default function App() {
         <label className="w-100">
           <strong>Paste your sample data:&#160;</strong>
           <textarea
+            className="rounded"
             value={inputData}
             onChange={e => setInputData(e.target.value)}
           />
@@ -71,7 +72,12 @@ export default function App() {
         </button> */}
       </section>
       <section className="output-data">
-        <textarea value={schemaOutput} readOnly={true} />
+        <textarea
+          value={schemaOutput}
+          readOnly={true}
+          className="rounded text-monospace text-light bg-dark p-2"
+          onClick={e => e.target.select()}
+        />
       </section>
     </div>
   );
