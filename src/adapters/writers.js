@@ -8,5 +8,5 @@ export const render = (schemaName, writer) => content => {
   const renderer = writers[writer];
   if (!renderer) throw new Error(`Invalid Render Adapter Specified: ${writer}`);
 
-  return renderer.render(schemaName, content);
+  return renderer.render({ schemaName, results: content });
 };

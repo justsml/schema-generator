@@ -298,5 +298,17 @@ export const exampleUsers = `[
     "catchPhrase": "Open-source regional capability",
     "companyName": "Braun Group",
     "profile": "Aut assumenda nihil. Voluptatibus repudiandae voluptatibus delectus. Perspiciatis odio ut molestiae. Nihil sit magnam quam ex omnis."
+  },
+  {
+    "id": 9999999,
+    "email": false,
+    "firstName": false,
+    "lastName": false,
+    "isActive": true,
+    "createdAt": "1997-08-29T00:00:00.000Z",
+    "modifiedAt": "1995-10-15T00:00:00.000Z",
+    "catchPhrase": "Open-source regional capability",
+    "companyName": "Braun Group",
+    "profile": 999999999999
   }
 ]`;

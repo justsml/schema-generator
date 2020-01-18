@@ -13,10 +13,22 @@
 .output-data textarea,
 .input-data textarea {
   width: 100%;
-  min-height: 33vh;
+  height: 33vh;
+}
+
+.input-data textarea {
+  max-height: 100px;
+}
+.output-data textarea {
+  min-height: 500px;
 }
 
 .output-ui select,
 .output-ui button {
   max-width: 50%;
+}
+
+form .field-name {
+  display: block;
+  font-size: 1.15rem;
 }
