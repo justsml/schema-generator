@@ -2,7 +2,7 @@
 
 > An open source tool brought to you by Dan Levy ✨
 
-## Generate intelligently auto-typed database scripts from JSON or CSV
+## Generate intelligent auto-typed database scripts from JSON or CSV.
 
 ### Currently Supports...
 
