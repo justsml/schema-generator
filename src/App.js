@@ -6,7 +6,7 @@ import GeneratorForm from "./components/GeneratorForm";
 
 export default function App() {
   return (
-    <div className="App container-fluid">
+    <div className="App container">
       <NavBar />
       <Header />
       <GeneratorForm />

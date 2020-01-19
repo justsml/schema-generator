@@ -3,6 +3,7 @@ import { schemaBuilder } from "../schemaBuilder";
 import { exampleUsers } from "../sampleData.js";
 import { parse } from "../adapters/readers.js";
 import { render } from "../adapters/writers.js";
+import CodeViewer from "./CodeViewer";
 const MongoDbIcon = () => (
   <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <title>MongoDB icon</title>
@@ -30,16 +31,22 @@ export default function GeneratorForm() {
       .catch(error => {
         setSchemaOutput(`ERROR!   ${error.message}`);
         console.error(error);
-      });
+      })
+      .then(scrollToOutput);
+  };
+
+  const scrollToOutput = () => {
+    const output = document.querySelector(".output-data");
+    output.scrollIntoView({ block: "start", behavior: "smooth" });
   };
 
   return (
-    <form className="form w-100" onSubmit={e => e.preventDefault()}>
+    <form className="form generator w-100" onSubmit={e => e.preventDefault()}>
       <section className="input-data">
         <label className="w-100">
           <strong className="field-name">Schema Name:&#160;</strong>
           <input
-            className="rounded"
+            className="rounded w-100"
             value={schemaName}
             onChange={e => setSchemaName(e.target.value)}
           />
@@ -87,16 +94,11 @@ export default function GeneratorForm() {
           Sample Data/Reset
         </button> */}
       </section>
-      {schemaOutput && schemaOutput.length > 1 && (
-        <section className="output-data">
-          <textarea
-            value={schemaOutput}
-            readOnly={true}
-            className="rounded text-monospace text-light bg-dark p-2"
-            onClick={e => e.target.select()}
-          />
-        </section>
-      )}
+      <section className="output-data">
+        {schemaOutput && schemaOutput.length > 1 && (
+          <CodeViewer>{schemaOutput}</CodeViewer>
+        )}
+      </section>
     </form>
   );
 }
