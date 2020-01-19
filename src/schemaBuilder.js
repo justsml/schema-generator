@@ -69,41 +69,46 @@ function evaluateSchemaLevel(schema, obj, index, array) {
 function condenseFieldData(schema) {
   console.log("schema", schema);
   const fields = Object.keys(schema._fieldData);
+  // Summarize field/column data so only minimal field metadata is sent along to the Writer Adapters.
   schema._summary = fields.map(fieldName => {
     const fieldSummaryArray = schema._fieldData[fieldName];
-    const fieldLengths = getFieldRangeInfo(
-      fieldSummaryArray.map(f => f.length).sort()
-    );
+    // Get min & max bytes seen for string fields, and min & max range for numeric fields.
+    const getFieldRangeByName = sizeField =>
+      getFieldRangeInfo(
+        fieldSummaryArray
+          .map(f => f[sizeField])
+          .sort()
+          .filter(f => f != null)
+      );
+    const fieldLengths = getFieldRangeByName("length");
+    // Get size info for floating point fields
+    const fieldPrecisions = getFieldRangeByName("precision");
+    const fieldScales = getFieldRangeByName("scale");
+
+    // Count up each type's # of occurences
     const fieldTypesFound = fieldSummaryArray.reduce((counts, field) => {
-      const typeName = field.typeGuess;
-      counts[typeName] = counts[typeName] || 0;
-      counts[typeName]++;
+      const name = field.typeGuess;
+      counts[name] = counts[name] || 0;
+      counts[name]++;
       return counts;
     }, {});
-
+    // Get top type by sortting the types. We'll pass along all the type counts to the writer adapter.
+    const typeRank = Object.entries(fieldTypesFound).sort(
+      ([n1, count1], [n2, count2]) =>
+        count1 > count2 ? -1 : count1 === count2 ? 0 : 1
+    );
     return {
       fieldName,
       typeInfo: fieldTypesFound,
-      sizeInfo: fieldLengths
+      typeRank,
+      sizeInfo: {
+        ...fieldLengths,
+        precision: fieldPrecisions,
+        scale: fieldScales
+      }
     };
   });
   return schema;
-  // cleanup the schema
-  // Object.keys(schema._uniques).map(k => {
-  //   //TODO: Add null counter to prevent false-positive enum detections
-  //   let setToEnumLimit = 6; // schema._totalRecords * 0.5; // 5% default
-  //   if (
-  //     ["number", "string"].indexOf(schema[k].type) > -1 &&
-  //     schema._uniques[k].size <= setToEnumLimit
-  //   ) {
-  //     schema[k] = DATA_ENUM_TYPE;
-  //     schema[k].enum = Array.from(schema._uniques[k]).sort();
-  //     console.log(`Enumified ${k}=${schema[k].enum.join(", ")}`);
-  //   } else {
-  //     schema._uniques[k] = null; //Array.from(schema._uniques[k]).sort().join(', '); //temp for debugging// set to null or remove later
-  //   }
-  // });
-  // return schema;
 }
 
 function guessTypeSimple({ currentType, currentValue }) {
@@ -147,16 +152,26 @@ function checkUpgradeType({
   recursive = false
 }) {
   const typeGuess = guessTypeSimple({ currentType, currentValue }).type;
-  let length = null;
+  let length = undefined;
+  let precision = undefined;
+  let scale = undefined;
 
-  if (typeGuess === "Number") length = parseFloat(currentValue);
+  if (typeGuess === "Number") {
+    length = parseFloat(currentValue);
+    const significandAndMantissa = String(currentValue).split(".");
+    if (significandAndMantissa.length === 2) {
+      // floating point number!
+      precision = significandAndMantissa.join("").length; // total # of numeric positions before & after decimal
+      scale = significandAndMantissa[1].length;
+    }
+  }
   if (typeGuess === "String") length = String(currentValue).length;
   // console.log(`Guessed type for ${key}=${typeGuess}`);
   if (typeGuess === "Object" && Object.keys(currentValue).length >= 2) {
     if (recursive) return evaluateSchemaLevel(schema[key], currentValue);
     length = Object.keys(currentValue);
   }
-  return { typeGuess, length };
+  return { typeGuess, length, precision, scale };
   // if (priority.indexOf(typeGuess) >= priority.indexOf(currentType)) {
   //   return typeGuess;
   // } else {
@@ -165,6 +180,7 @@ function checkUpgradeType({
 }
 
 function getFieldRangeInfo(lengths) {
+  if (!lengths || lengths.length < 1) return undefined;
   return {
     min: lengths[0],
     max: lengths[lengths.length - 1],

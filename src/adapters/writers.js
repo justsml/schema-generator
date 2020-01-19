@@ -1,7 +1,9 @@
 import mongooseWriter from "./writer.mongoose.js";
+import knexWriter from "./writer.knex.js";
 
 const writers = {
-  mongoose: mongooseWriter
+  mongoose: mongooseWriter,
+  knex: knexWriter
 };
 
 export const render = (schemaName, writer) => content => {

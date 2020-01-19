@@ -56,10 +56,10 @@ export default function GeneratorForm() {
               onChange={e => setOutputMode(e.target.value)}
               defaultValue={outputMode}
             >
-              <option>mongoose</option>
-              <option>knex migration</option>
-              <option>sql</option>
-              <option>yup validation</option>
+              <option value="mongoose">mongoose</option>
+              <option value="knex">knex migration</option>
+              <option value="sql">sql</option>
+              {/* <option>yup validation</option> */}
             </select>
           </label>
         </div>

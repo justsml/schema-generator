@@ -10,6 +10,7 @@
     "csv-parse": "4.8.5",
     "lodash.isdate": "4.0.1",
     "lodash.isnumber": "3.0.3",
+    "lodash.snakecase": "4.1.1",
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "react-scripts": "3.0.1"

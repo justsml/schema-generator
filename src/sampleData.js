@@ -9,6 +9,9 @@ export const exampleUsers = `[
     "modifiedAt": "2009-03-12T00:00:00.000Z",
     "catchPhrase": "Open-source directional array",
     "companyName": "Towne Ltd",
+    "credits": 1,
+    "salesScore": 1.75129,
+    "location": "nyc",
     "profile": "In architecto ut voluptatem ad et odio ut cupiditate. Sunt minima aut temporibus facilis dolorum accusantium recusandae et est. Praesentium quaerat sequi dolor adipisci sit qui. Deserunt est ab numquam officia iure delectus occaecati."
   },
   {
@@ -21,6 +24,9 @@ export const exampleUsers = `[
     "modifiedAt": "2007-05-10T00:00:00.000Z",
     "catchPhrase": "Optimized fresh-thinking database",
     "companyName": "Murphy LLC",
+    "credits": 15,
+    "salesScore": 15.75129,
+    "location": "remote",
     "profile": "Quaerat veritatis ab. Sequi non expedita quia. Suscipit et sunt. Illum non explicabo minus quod molestias velit."
   },
   {
@@ -33,6 +39,9 @@ export const exampleUsers = `[
     "modifiedAt": "1999-08-10T00:00:00.000Z",
     "catchPhrase": "Re-engineered optimizing forecast",
     "companyName": "Frami Group",
+    "credits": 20,
+    "salesScore": 11.453456,
+    "location": "remote",
     "profile": "Quo pariatur hic est voluptatem rerum. Eos autem magni ad perferendis odio nulla. Et fugiat nostrum minima neque debitis autem. Ipsam dolorem reprehenderit distinctio ut ut."
   },
   {
@@ -45,6 +54,9 @@ export const exampleUsers = `[
     "modifiedAt": "1989-04-24T00:00:00.000Z",
     "catchPhrase": "Team-oriented local focusgroup",
     "companyName": "Breitenberg and Sons",
+    "credits": 10,
+    "salesScore": 10.75129,
+    "location": "nyc",
     "profile": "Ducimus voluptatibus neque ut omnis sed totam qui possimus. Facilis enim doloribus ea eligendi. Asperiores laudantium quia facilis cumque culpa tenetur pariatur. Cupiditate rerum veniam sint officia nesciunt adipisci recusandae quae."
   },
   {
@@ -57,6 +69,9 @@ export const exampleUsers = `[
     "modifiedAt": "2002-06-22T00:00:00.000Z",
     "catchPhrase": "Centralized scalable GraphicInterface",
     "companyName": "Schiller and Sons",
+    "credits": 20,
+    "salesScore": 11.453456,
+    "location": "remote",
     "profile": "Voluptates omnis dolor quis et. Nisi expedita repudiandae quia rem in. Labore vitae iusto est rerum. Magni omnis voluptatem corrupti."
   },
   {
@@ -69,6 +84,9 @@ export const exampleUsers = `[
     "modifiedAt": "2004-01-14T00:00:00.000Z",
     "catchPhrase": "Open-architected value-added focusgroup",
     "companyName": "Collier LLC",
+    "credits": 20,
+    "salesScore": 11.453456,
+    "location": "remote",
     "profile": "Cumque beatae ut. Eum velit iusto sit accusantium quis adipisci quo voluptatum. Et et quo cum laudantium. Nulla dicta dolorem aspernatur perferendis sit omnis aut."
   },
   {
@@ -81,6 +99,9 @@ export const exampleUsers = `[
     "modifiedAt": "1986-01-22T00:00:00.000Z",
     "catchPhrase": "Realigned multimedia analyzer",
     "companyName": "Keeling Inc",
+    "credits": 0,
+    "salesScore": 0.75129,
+    "location": "remote",
     "profile": "Mollitia totam eveniet quos pariatur ducimus id tenetur dolorem maxime. Error et eveniet. Doloribus et ad deserunt. Sapiente mollitia eveniet voluptatem id."
   },
   {
@@ -93,6 +114,9 @@ export const exampleUsers = `[
     "modifiedAt": "1987-02-11T00:00:00.000Z",
     "catchPhrase": "Profit-focused analyzing help-desk",
     "companyName": "Crist Group",
+    "credits": 11,
+    "salesScore": 11.75129,
+    "location": "remote",
     "profile": "Ea quo iste libero ullam. Id perferendis nulla voluptas libero eaque omnis et cum. Excepturi debitis magni unde. Esse est non quaerat."
   },
   {
@@ -105,6 +129,9 @@ export const exampleUsers = `[
     "modifiedAt": "1982-10-31T00:00:00.000Z",
     "catchPhrase": "Adaptive solution-oriented forecast",
     "companyName": "Fahey Group",
+    "credits": 20,
+    "salesScore": 20.75129,
+    "location": "remote",
     "profile": "Aperiam et voluptas perferendis soluta quam eveniet consequuntur et expedita. Officia non et eum qui voluptas voluptatum. Maxime libero sed quis aut molestiae et facilis. Et labore sunt rerum saepe quibusdam reprehenderit sapiente."
   },
   {
@@ -117,6 +144,9 @@ export const exampleUsers = `[
     "modifiedAt": "2005-05-09T00:00:00.000Z",
     "catchPhrase": "Seamless object-oriented methodology",
     "companyName": "Rolfson PLC",
+    "credits": 20,
+    "salesScore": 20.75129,
+    "location": "remote",
     "profile": "Asperiores dolorem soluta. Porro eum dolorem alias. Porro in pariatur distinctio. Nihil nobis et quis labore accusantium minima quod."
   },
   {
@@ -129,6 +159,9 @@ export const exampleUsers = `[
     "modifiedAt": "1978-01-26T00:00:00.000Z",
     "catchPhrase": "Expanded assymetric capability",
     "companyName": "Jakubowski Ltd",
+    "credits": 20,
+    "salesScore": 20.75129,
+    "location": "remote",
     "profile": "Cumque labore odit quidem eligendi. Excepturi dolorem autem voluptas dolore earum. Nemo est beatae aliquid non consequatur quidem. Natus hic iure et."
   },
   {
@@ -141,6 +174,9 @@ export const exampleUsers = `[
     "modifiedAt": "2012-01-27T00:00:00.000Z",
     "catchPhrase": "Team-oriented well-modulated array",
     "companyName": "Cartwright Ltd",
+    "credits": 20,
+    "salesScore": 20.75129,
+    "location": "denver",
     "profile": "Ipsam at unde commodi iure fuga molestiae est rem. Qui id laboriosam rem. Quasi ut suscipit laboriosam. Dignissimos ullam aut quidem sint nisi animi."
   },
   {
@@ -153,6 +189,9 @@ export const exampleUsers = `[
     "modifiedAt": "2001-11-15T00:00:00.000Z",
     "catchPhrase": "Cross-group web-enabled workforce",
     "companyName": "Reichel Ltd",
+    "credits": 20,
+    "salesScore": 20.65545,
+    "location": "remote",
     "profile": "Dolores nulla error. Sint odit est corporis quibusdam optio. Inventore et veritatis consequatur cum iure dicta. Sunt impedit rerum enim rerum."
   },
   {
@@ -165,6 +204,9 @@ export const exampleUsers = `[
     "modifiedAt": "1975-12-13T00:00:00.000Z",
     "catchPhrase": "Automated static functionalities",
     "companyName": "Barton LLC",
+    "credits": 20,
+    "salesScore": 20.65545,
+    "location": "remote",
     "profile": "Omnis optio magnam natus iste laudantium consequatur. Pariatur laudantium sit ut delectus. Hic unde odit quos fugiat quia repellendus repellendus aliquid. Non qui ipsum eum laborum magni."
   },
   {
@@ -177,6 +219,9 @@ export const exampleUsers = `[
     "modifiedAt": "1989-05-12T00:00:00.000Z",
     "catchPhrase": "Extended dynamic matrix",
     "companyName": "Morissette Ltd",
+    "credits": 20,
+    "salesScore": 20.65545,
+    "location": "remote",
     "profile": "Dolorem explicabo nisi minima eum enim culpa explicabo aut. Doloremque voluptas doloribus sunt illo harum facilis. Vitae consequuntur enim sed cupiditate ea. Quia labore aspernatur quae."
   },
   {
@@ -189,6 +234,9 @@ export const exampleUsers = `[
     "modifiedAt": "1991-04-25T00:00:00.000Z",
     "catchPhrase": "User-centric executive collaboration",
     "companyName": "Kemmer LLC",
+    "credits": 20,
+    "salesScore": 20.65545,
+    "location": "remote",
     "profile": "Numquam quibusdam laudantium debitis reiciendis velit similique. Dicta minus rerum quod totam odit doloremque. Voluptatem et ut corporis aliquid dignissimos. Est dolore ut repudiandae asperiores ut deleniti."
   },
   {
@@ -201,6 +249,9 @@ export const exampleUsers = `[
     "modifiedAt": "2016-04-06T00:00:00.000Z",
     "catchPhrase": "Public-key client-server hardware",
     "companyName": "Schinner Group",
+    "credits": 20,
+    "salesScore": 20.75129,
+    "location": "denver",
     "profile": "Dolorem veritatis modi maiores et cumque eveniet ut accusamus. Minus fugiat omnis voluptas. Eligendi nihil et sunt odit. Cumque id similique tempore animi qui occaecati et."
   },
   {
@@ -213,6 +264,9 @@ export const exampleUsers = `[
     "modifiedAt": "1971-03-31T00:00:00.000Z",
     "catchPhrase": "Universal 3rdgeneration encoding",
     "companyName": "Rosenbaum Group",
+    "credits": 20,
+    "salesScore": 20.75129,
+    "location": "denver",
     "profile": "Aut voluptatem quo adipisci nostrum omnis delectus sint enim non. Ad iusto tempore provident. Quo vero qui occaecati. Tempora et rem in aliquid."
   },
   {
@@ -225,6 +279,9 @@ export const exampleUsers = `[
     "modifiedAt": "2013-04-23T00:00:00.000Z",
     "catchPhrase": "Stand-alone mission-critical budgetarymanagement",
     "companyName": "Barton and Sons",
+    "credits": 20,
+    "salesScore": 20.9877865,
+    "location": "denver",
     "profile": "Excepturi quaerat ipsum id reprehenderit temporibus. Voluptatibus amet quia. Sint rerum officia. Aut enim sunt."
   },
   {
@@ -237,6 +294,9 @@ export const exampleUsers = `[
     "modifiedAt": "2001-02-13T00:00:00.000Z",
     "catchPhrase": "Advanced 6thgeneration budgetarymanagement",
     "companyName": "Kassulke Inc",
+    "credits": 20,
+    "salesScore": 20.9877865,
+    "location": "denver",
     "profile": "Dolorem voluptatem dolorem quis incidunt molestiae architecto velit. Velit illum et et. Facilis aut id dicta dolorem at veniam. Est eum molestiae quod eveniet ratione eum libero et."
   },
   {
@@ -249,6 +309,9 @@ export const exampleUsers = `[
     "modifiedAt": "1992-08-26T00:00:00.000Z",
     "catchPhrase": "Persistent systematic toolset",
     "companyName": "Block LLC",
+    "credits": 20,
+    "salesScore": 20.9877865,
+    "location": "remote",
     "profile": "Eaque eum rerum voluptate ut. Quaerat asperiores possimus doloremque reiciendis qui necessitatibus quo. Ea tempora distinctio neque deleniti tempore eum. Corporis ipsum voluptatem expedita sit."
   },
   {
@@ -261,6 +324,9 @@ export const exampleUsers = `[
     "modifiedAt": "2001-03-02T00:00:00.000Z",
     "catchPhrase": "Open-source heuristic projection",
     "companyName": "Ratke PLC",
+    "credits": 20,
+    "salesScore": 20.9877865,
+    "location": "remote",
     "profile": "Dolor et porro amet ut rerum. Reprehenderit voluptas nesciunt aut quo aut. Temporibus reiciendis in quia optio aut maxime molestias. Modi pariatur impedit eum."
   },
   {
@@ -273,6 +339,9 @@ export const exampleUsers = `[
     "modifiedAt": "2012-02-10T00:00:00.000Z",
     "catchPhrase": "Optimized multi-state strategy",
     "companyName": "Jacobson Inc",
+    "credits": 20,
+    "salesScore": 11.453456,
+    "location": "remote",
     "profile": "Non veniam nemo id optio. Et accusantium molestiae deserunt tenetur qui est. Dolor sed est veritatis doloribus deleniti. Repudiandae atque ratione ducimus reiciendis."
   },
   {
@@ -285,6 +354,9 @@ export const exampleUsers = `[
     "modifiedAt": "1985-09-05T00:00:00.000Z",
     "catchPhrase": "Customizable coherent infrastructure",
     "companyName": "Kutch Ltd",
+    "credits": 7,
+    "salesScore": 7.75129,
+    "location": "remote",
     "profile": "Non omnis et voluptates consequuntur id. Impedit sed deleniti ut. Veniam voluptatem aut ipsam sunt. Veritatis perspiciatis voluptates cumque est voluptas animi quos alias."
   },
   {
@@ -297,6 +369,9 @@ export const exampleUsers = `[
     "modifiedAt": "1995-10-15T00:00:00.000Z",
     "catchPhrase": "Open-source regional capability",
     "companyName": "Braun Group",
+    "credits": 20,
+    "salesScore": 11.453456,
+    "location": "remote",
     "profile": "Aut assumenda nihil. Voluptatibus repudiandae voluptatibus delectus. Perspiciatis odio ut molestiae. Nihil sit magnam quam ex omnis."
   },
   {
@@ -309,6 +384,9 @@ export const exampleUsers = `[
     "modifiedAt": "1995-10-15T00:00:00.000Z",
     "catchPhrase": "Open-source regional capability",
     "companyName": "Braun Group",
+    "credits": 9,
+    "salesScore": 9.75129,
+    "location": "remote",
     "profile": 999999999999
   }
 ]`;
