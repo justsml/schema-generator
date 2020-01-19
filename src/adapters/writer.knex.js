@@ -38,7 +38,7 @@ export default {
         typeMethod = typeMethod === "date" ? "datetime" : typeMethod;
         if (sizeInfo.precision && sizeInfo.precision.max) {
           typeMethod = "float";
-          sizePart = `, ${sizeInfo.precision.max}, ${sizeInfo.scale.max}`;
+          sizePart = `, ${1 + sizeInfo.precision.max}, ${sizeInfo.scale.max}`;
         } else if (topType === "number" && sizeInfo.max > 2147483647) {
           typeMethod = "bigInteger";
           sizePart = "";

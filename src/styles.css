@@ -32,3 +32,14 @@ form .field-name {
   display: block;
   font-size: 1.15rem;
 }
+
+.output-ui button {
+  width: 30%;
+  max-width: 300px;
+  font-size: 1.4rem;
+}
+
+.output-ui button svg {
+  max-width: 50px;
+  margin: 1rem 1.4rem;
+}
