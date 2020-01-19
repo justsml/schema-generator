@@ -10,7 +10,7 @@ const DATA_ENUM_TYPE = { type: "String", default: null, enum: [] };
 const DATA_ARRAY_TYPE = { type: "Array", default: null };
 const DATA_OBJECT_TYPE = { type: "Object", default: null };
 const DATA_DATE_TYPE = { type: "Date", default: null };
-const DATA_DEFAULT_TYPE = DATA_BOOLEAN_TYPE;
+const DATA_DEFAULT_TYPE = { type: "null" };
 
 const priority = [
   DATA_BOOLEAN_TYPE,
@@ -112,8 +112,8 @@ function condenseFieldData(schema) {
 }
 
 function guessTypeSimple({ currentType, currentValue }) {
-  if (currentValue === null || currentValue === "") {
-    return currentType || DATA_DEFAULT_TYPE;
+  if (currentValue == null || currentValue === "") {
+    return DATA_DEFAULT_TYPE;
   } else if (typeof currentValue === "boolean") {
     return DATA_BOOLEAN_TYPE;
   } else if (typeof currentValue === "number") {

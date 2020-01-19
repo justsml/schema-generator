@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { schemaBuilder } from "../schemaBuilder";
-import { exampleUsers } from "../sampleData.js";
 import { parse } from "../adapters/readers.js";
 import { render } from "../adapters/writers.js";
 import CodeViewer from "./CodeViewer";
@@ -19,7 +18,7 @@ const PostgresIcon = () => (
 
 export default function GeneratorForm() {
   const [schemaName, setSchemaName] = useState("User");
-  const [inputData, setInputData] = useState(exampleUsers);
+  const [inputData, setInputData] = useState("");
   const [schemaOutput, setSchemaOutput] = useState("");
 
   const generateSchema = outputMode => {
@@ -40,6 +39,24 @@ export default function GeneratorForm() {
     output.scrollIntoView({ block: "start", behavior: "smooth" });
   };
 
+  const loadData = name => {
+    let filePath = "";
+    if (name === "products") filePath = "products-3000.csv";
+    if (name === "listings") filePath = "real-estate.example.json";
+    if (name === "people") filePath = "swapi-people.json";
+    if (name === "users") filePath = "users.example.json";
+    setInputData(`One moment...\nImporting ${name} dataset...`);
+    return fetch(filePath)
+      .then(response => response.text())
+      .then(data => {
+        setSchemaName(name);
+        setInputData(data);
+      })
+      .catch(error => {
+        setInputData(`Oh noes! Failed to load the ${name} dataset.
+          Please file an issue on the project's GitHub Issues.`);
+      });
+  };
   return (
     <form className="form generator w-100" onSubmit={e => e.preventDefault()}>
       <section className="input-data">
@@ -60,6 +77,22 @@ export default function GeneratorForm() {
             value={inputData}
             onChange={e => setInputData(e.target.value)}
           />
+        </label>
+        <label className="w-100">
+          <strong className="field-name text-muted">
+            Or, select dataset to test:&#160;
+          </strong>
+          <select
+            className="rounded w-100"
+            defaultValue={""}
+            onChange={e => loadData(e.target.value)}
+          >
+            <option value="">[Or, choose sample data to load]</option>
+            <option value="users">Generated/Fake Users</option>
+            <option value="people">Star Wars API 'People'</option>
+            <option value="products">Products CSV (Public data)</option>
+            <option value="listings">Real Estate Listings</option>
+          </select>
         </label>
       </section>
       <section className="output-ui">

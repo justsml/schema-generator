@@ -1,4 +1,4 @@
-export const exampleUsers = `[
+[
   {
     "id": "388fcdb6-a4c1-41b9-b3a2-63f6d9b58c62",
     "email": "Citlalli.Volkman@hotmail.com",
@@ -389,4 +389,4 @@ export const exampleUsers = `[
     "location": "remote",
     "profile": 999999999999
   }
-]`;
+]
