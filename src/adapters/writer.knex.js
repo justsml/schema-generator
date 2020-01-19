@@ -19,8 +19,8 @@ const getFieldLengthArg = (fieldName, maxLength) => {
 export default {
   render({ schemaName, results, options }) {
     console.log(results);
-    results._uniques = undefined;
-    results._totalRecords = undefined;
+    // results._uniques = undefined;
+    // results._totalRecords = undefined;
     const fieldSummary = results._summary;
 
     const fieldDefs = fieldSummary
@@ -29,6 +29,8 @@ export default {
         let appendChain = ``;
         let topType = (typeRank && typeRank[0] && typeRank[0][0]) || "String";
         topType = topType.toLowerCase();
+        if (topType === "null")
+          topType = (typeRank && typeRank[1] && typeRank[1][0]) || "string";
         let typeMethod =
           fieldName === "id" && topType === "number" ? "serial" : topType;
         let sizePart =
