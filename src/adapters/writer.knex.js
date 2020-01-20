@@ -31,6 +31,7 @@ export default {
         topType = topType.toLowerCase();
         if (topType === "null")
           topType = (typeRank && typeRank[1] && typeRank[1][0]) || "string";
+        topType = topType.toLowerCase();
         let typeMethod =
           fieldName === "id" && topType === "number" ? "serial" : topType;
         let sizePart =
