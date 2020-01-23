@@ -49,7 +49,9 @@ export default {
           typeMethod = "integer";
         }
         if (fieldName === "id") appendChain = ".primary()";
-        console.log(fieldName, sizeInfo);
+        if (typeMethod === "array" || typeMethod === "object")
+          typeMethod = "json";
+        // console.log(fieldName, sizeInfo);
         return `      table.${typeMethod}("${snakecase(
           f.fieldName
         )}"${sizePart})${appendChain};`;
