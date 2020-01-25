@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { schemaBuilder } from "../schemaBuilder";
+import { schemaBuilder } from "../schema-builder";
 import { parse } from "../adapters/readers.js";
 import { render } from "../adapters/writers.js";
 import CodeViewer from "./CodeViewer";

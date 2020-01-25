@@ -18,6 +18,8 @@
     "react-syntax-highlighter": "12.2.1"
   },
   "devDependencies": {
+    "@types/jest": "^24.9.0",
+    "jest": "^24.9.0",
     "typescript": "3.3.3"
   },
   "scripts": {
