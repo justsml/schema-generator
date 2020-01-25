@@ -1,4 +1,4 @@
-import { schemaBuilder } from "../index.js"
+import { schemaBuilder } from '../index.js'
 
 it('generates correct schema columns: sample #1', () => {
   // schemaBuilder()

@@ -23,10 +23,10 @@ it('can detect ambiguous data', () => {
 })
 
 it('can detect objectId\'s', () => {
-  expect(TYPE_OBJECT_ID.check("112345679065574883030833")).toBe(true)
-  expect(TYPE_OBJECT_ID.check("FFFFFFFFFFFFFFFFFFFFFFFF")).toBe(true)
-  expect(TYPE_OBJECT_ID.check("45cbc4a0e4123f6920000002")).toBe(true)
-  expect(TYPE_OBJECT_ID.check("45cbc4a0e4123f6920")).toBe(false)
+  expect(TYPE_OBJECT_ID.check('112345679065574883030833')).toBe(true)
+  expect(TYPE_OBJECT_ID.check('FFFFFFFFFFFFFFFFFFFFFFFF')).toBe(true)
+  expect(TYPE_OBJECT_ID.check('45cbc4a0e4123f6920000002')).toBe(true)
+  expect(TYPE_OBJECT_ID.check('45cbc4a0e4123f6920')).toBe(false)
 })
 
 it('can detect UUID strings', () => {
