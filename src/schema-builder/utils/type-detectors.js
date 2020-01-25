@@ -1,5 +1,8 @@
-export { isObjectId, isDateString, isNumeric }
+export { isObjectId, isUuid, isDateString, isNumeric }
 
+function isUuid(str, fieldName) {
+  return /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(str)
+}
 function isObjectId (str, fieldName) {
   return /^[a-f\d]{24}$/i.test(str)
 }
