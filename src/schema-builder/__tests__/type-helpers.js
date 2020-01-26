@@ -60,6 +60,8 @@ it('can detect currency', () => {
   expect(TYPE_CURRENCY.check('$1')).toBeTruthy()
   expect(TYPE_CURRENCY.check('€500')).toBeTruthy()
   expect(TYPE_CURRENCY.check('¥9999')).toBeTruthy()
+  expect(TYPE_CURRENCY.check('500€')).toBeTruthy()
+  expect(TYPE_CURRENCY.check('9999 ¥')).toBeTruthy()
   expect(TYPE_CURRENCY.check('$1.00')).toBeTruthy()
   expect(TYPE_CURRENCY.check('$1,00')).toBeTruthy()
   expect(TYPE_CURRENCY.check('$42,000,000')).toBeTruthy()

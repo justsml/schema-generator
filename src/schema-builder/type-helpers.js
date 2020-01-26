@@ -1,5 +1,5 @@
 import isDate from 'lodash.isdate'
-import isNumber from 'lodash.isnumber'
+// import isNumber from 'lodash.isnumber'
 import { isObjectId, isUuid, isDateString, isNumeric } from './utils/type-detectors.js'
 
 // Basic Type Filters - rudimentary data sniffing used to tally up "votes" for a given field
@@ -33,7 +33,7 @@ const TYPE_CURRENCY = {
   type: 'Currency',
   check: value => {
     if (value !== null) {
-      return /^\p{Sc}\s?[\d,.]+$/uig.test(value)
+      return /^\p{Sc}\s?[\d,.]+$/uig.test(value) || /^[\d,.]+\s?\p{Sc}$/uig.test(value)
     }
   }
 }
