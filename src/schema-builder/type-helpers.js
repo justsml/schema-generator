@@ -21,19 +21,19 @@ const TYPE_UUID = {
 }
 const TYPE_BOOLEAN = {
   type: 'Boolean',
-  check: value => !!value && /^([YN]|(TRUE)|(FALSE))$/i.test(String(value))
+  check: value => !!value && (/^([YN]|(TRUE)|(FALSE))$/i.test(String(value)) || typeof value === 'boolean')
 }
 const TYPE_DATE = {
   type: 'Date', check: value => isDateString(value) || isDate(value)
 }
 const TYPE_TIMESTAMP = {
-  type: 'Timestamp', check: value => /^1\d{12}$/.test(value)
+  type: 'Timestamp', check: value => /^[12]\d{12}$/.test(value)
 }
 const TYPE_CURRENCY = {
   type: 'Currency',
   check: value => {
     if (value !== null) {
-      /^\p{Sc}\s?[\d,.]+$/.test(value)
+      return /^\p{Sc}\s?[\d,.]+$/uig.test(value)
     }
   }
 }
@@ -41,15 +41,19 @@ const TYPE_FLOAT = {
   type: 'Float',
   check: value => {
     if (value !== null) {
-      if (isNumeric(value) && isNumber(value) && !Number.isInteger(value)) return true
+      return isNumeric(String(value)) && !Number.isInteger(value) ? true : false
     }
   }
 }
 const TYPE_NUMBER = {
   type: 'Number',
   check: value => {
-    return !!(value !== null && (isNumeric(value) && Number.isInteger(value)))
+    return !!(value !== null && (isNumeric(value) || Number.isInteger(value)))
   }
+}
+const TYPE_EMAIL = {
+  type: 'Email',
+  check: value => /^[a-z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-z0-9-]+(?:\\.[a-z0-9-]+)*$/i.test(value)
 }
 const TYPE_STRING = {
   type: 'String',
@@ -64,7 +68,7 @@ const TYPE_ARRAY = {
 const TYPE_OBJECT = {
   type: 'Object',
   check: value => {
-    return !Array.isArray(value) && typeof value === 'object'
+    return !Array.isArray(value) && value != null && typeof value === 'object'
   }
 }
 const TYPE_NULL = { type: 'null', check: value => value === null || /null/i.test(value) }
@@ -80,6 +84,7 @@ const priority = [
   TYPE_FLOAT,
   TYPE_NUMBER,
   TYPE_NULL,
+  TYPE_EMAIL,
   TYPE_STRING,
   TYPE_ARRAY,
   TYPE_OBJECT
@@ -97,6 +102,7 @@ export {
   TYPE_FLOAT,
   TYPE_NUMBER,
   TYPE_NULL,
+  TYPE_EMAIL,
   TYPE_STRING,
   TYPE_ARRAY,
   TYPE_OBJECT
