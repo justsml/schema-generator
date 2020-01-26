@@ -34,7 +34,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint",
-      "pre-push": "npm test -- --ci"
+      "pre-push": "CI=true npm test"
     }
   },
   "browserslist": [
