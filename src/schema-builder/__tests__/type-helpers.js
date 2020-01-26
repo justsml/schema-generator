@@ -113,7 +113,7 @@ it('can detect array', () => {
 })
 it('can detect object', () => {
   expect(TYPE_OBJECT.check({})).toBeTruthy()
-  expect(TYPE_OBJECT.check({goat: []})).toBeTruthy()
+  expect(TYPE_OBJECT.check({ goat: [] })).toBeTruthy()
   expect(TYPE_OBJECT.check([])).toBeFalsy()
   expect(TYPE_OBJECT.check(null)).toBeFalsy()
 })

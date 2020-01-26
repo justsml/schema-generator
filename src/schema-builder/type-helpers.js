@@ -41,7 +41,7 @@ const TYPE_FLOAT = {
   type: 'Float',
   check: value => {
     if (value !== null) {
-      return isNumeric(String(value)) && !Number.isInteger(value) ? true : false
+      return !!(isNumeric(String(value)) && !Number.isInteger(value))
     }
   }
 }
