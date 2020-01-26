@@ -21,7 +21,7 @@ const TYPE_UUID = {
 }
 const TYPE_BOOLEAN = {
   type: 'Boolean',
-  check: value => !!value && (/^([YN]|(TRUE)|(FALSE))$/i.test(String(value)) || typeof value === 'boolean')
+  check: value => !!value && (typeof value === 'boolean' || /^([YN]|(TRUE)|(FALSE))$/i.test(String(value)))
 }
 const TYPE_DATE = {
   type: 'Date', check: value => isDateString(value) || isDate(value)
@@ -48,12 +48,12 @@ const TYPE_FLOAT = {
 const TYPE_NUMBER = {
   type: 'Number',
   check: value => {
-    return !!(value !== null && (isNumeric(value) || Number.isInteger(value)))
+    return !!(value !== null && (Number.isInteger(value) || isNumeric(value)))
   }
 }
 const TYPE_EMAIL = {
   type: 'Email',
-  check: value => /^[a-z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-z0-9-]+(?:\\.[a-z0-9-]+)*$/i.test(value)
+  check: value => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/igm.test(value)
 }
 const TYPE_STRING = {
   type: 'String',
