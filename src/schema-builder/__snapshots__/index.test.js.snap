@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should compute range stats from array of objects: fieldInfoByKey 1`] = `
+Object {
+  "estimatedPrice": Object {
+    "Float": Object {
+      "count": 4,
+      "precision": Object {
+        "avg": 2,
+        "max": 2,
+        "min": 2,
+        "pct30": 2,
+        "pct60": 2,
+        "pct90": 2,
+      },
+      "scale": Object {
+        "avg": 5,
+        "max": 5,
+        "min": 5,
+        "pct30": 5,
+        "pct60": 5,
+        "pct90": 5,
+      },
+    },
+    "Number": Object {
+      "count": 1,
+      "length": Object {
+        "avg": 6,
+        "max": 6,
+        "min": 6,
+        "pct30": 6,
+        "pct60": 6,
+        "pct90": 6,
+      },
+    },
+    "String": Object {
+      "count": 3,
+      "length": Object {
+        "avg": 3.6666666666666665,
+        "max": 6,
+        "min": 2,
+        "pct30": 2,
+        "pct60": 3,
+        "pct90": 6,
+      },
+    },
+  },
+  "features": Object {
+    "Array": Object {
+      "count": 5,
+      "length": Object {
+        "avg": 7.75,
+        "max": 18,
+        "min": 1,
+        "pct30": 2,
+        "pct60": 10,
+        "pct90": 18,
+      },
+    },
+  },
+  "listPrice": Object {
+    "Float": Object {
+      "count": 5,
+      "precision": Object {
+        "avg": 2,
+        "max": 2,
+        "min": 2,
+        "pct30": 2,
+        "pct60": 2,
+        "pct90": 2,
+      },
+      "scale": Object {
+        "avg": 5.2,
+        "max": 9,
+        "min": 2,
+        "pct30": 4,
+        "pct60": 7,
+        "pct90": 9,
+      },
+    },
+    "String": Object {
+      "count": 4,
+      "length": Object {
+        "avg": 7,
+        "max": 10,
+        "min": 5,
+        "pct30": 5,
+        "pct60": 8,
+        "pct90": 10,
+      },
+    },
+  },
+  "salePrice": Object {
+    "Float": Object {
+      "count": 4,
+      "precision": Object {
+        "avg": 2,
+        "max": 2,
+        "min": 2,
+        "pct30": 2,
+        "pct60": 2,
+        "pct90": 2,
+      },
+      "scale": Object {
+        "avg": 5.5,
+        "max": 7,
+        "min": 4,
+        "pct30": 5,
+        "pct60": 6,
+        "pct90": 7,
+      },
+    },
+    "Number": Object {
+      "count": 1,
+      "length": Object {
+        "avg": 4,
+        "max": 4,
+        "min": 4,
+        "pct30": 4,
+        "pct60": 4,
+        "pct90": 4,
+      },
+    },
+    "String": Object {
+      "count": 3,
+      "length": Object {
+        "avg": 5,
+        "max": 6,
+        "min": 4,
+        "pct30": 4,
+        "pct60": 5,
+        "pct90": 6,
+      },
+    },
+  },
+  "status": Object {
+    "String": Object {
+      "count": 6,
+      "length": Object {
+        "avg": 6.666666666666667,
+        "max": 8,
+        "min": 6,
+        "pct30": 6,
+        "pct60": 6,
+        "pct90": 8,
+      },
+    },
+  },
+  "title": Object {
+    "Null": Object {
+      "count": 2,
+    },
+    "String": Object {
+      "count": 4,
+      "length": Object {
+        "avg": 44,
+        "max": 66,
+        "min": 20,
+        "pct30": 40,
+        "pct60": 50,
+        "pct90": 66,
+      },
+    },
+  },
+}
+`;
