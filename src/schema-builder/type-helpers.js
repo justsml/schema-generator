@@ -1,6 +1,12 @@
 import isDate from 'lodash.isdate'
-// import isNumber from 'lodash.isnumber'
 import { isObjectId, isUuid, isDateString, isNumeric } from './utils/type-detectors.js'
+
+function detectTypes(value, fieldName) {
+  return priority.reduce((types, typeHelper) => {
+    if (typeHelper.check(value)) types.push(typeHelper.type)
+    return types
+  }, [])
+}
 
 // Basic Type Filters - rudimentary data sniffing used to tally up "votes" for a given field
 /**
@@ -41,14 +47,14 @@ const TYPE_FLOAT = {
   type: 'Float',
   check: value => {
     if (value !== null) {
-      return !!(isNumeric(String(value)) && !Number.isInteger(value))
+      return !!(isNumeric(String(value)) && /\d\.\d/.test(String(value)) && !Number.isInteger(value))
     }
   }
 }
 const TYPE_NUMBER = {
   type: 'Number',
   check: value => {
-    return !!(value !== null && (Number.isInteger(value) || isNumeric(value)))
+    return !!(value !== null && !Array.isArray(value) && (Number.isInteger(value) || isNumeric(value)))
   }
 }
 const TYPE_EMAIL = {
@@ -71,7 +77,7 @@ const TYPE_OBJECT = {
     return !Array.isArray(value) && value != null && typeof value === 'object'
   }
 }
-const TYPE_NULL = { type: 'null', check: value => value === null || /null/i.test(value) }
+const TYPE_NULL = { type: 'Null', check: value => value === null || /null/i.test(value) }
 
 const priority = [
   TYPE_UNKNOWN,
@@ -92,6 +98,7 @@ const priority = [
 
 export {
   priority,
+  detectTypes,
   TYPE_UNKNOWN,
   TYPE_OBJECT_ID,
   TYPE_UUID,
