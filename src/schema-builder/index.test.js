@@ -85,7 +85,6 @@ const fieldInfoByKey = {
   ]
 }
 
-
 it('should compute range stats from array of objects', () => {
   expect(condenseFieldData(fieldInfoByKey)).toMatchSnapshot('fieldInfoByKey')
 })

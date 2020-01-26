@@ -106,8 +106,8 @@ function condenseFieldSizes(typeSizesList) {
     }
   }
   */
-  //  console.log('typeSizes SUM:', sumCounts)
-  // console.log(sizeRangeSummary)
+  console.log('typeSizes SUM:', sumCounts)
+  console.log(sizeRangeSummary)
   return sizeRangeSummary
 }
 
@@ -158,36 +158,6 @@ function condenseFieldSizes(typeSizesList) {
 //   return schema
 // }
 
-
-
-
-
-
-
-// function guessTypeSimple({ currentType, currentValue }) {
-//   if (currentValue == null || currentValue === "") {
-//     return TYPE_DEFAULT;
-//   } else if (typeof currentValue === "boolean") {
-//     return TYPE_BOOLEAN;
-//   } else if (typeof currentValue === "number") {
-//     return TYPE_NUMBER;
-//   } else if (isDateString(currentValue) || isDate(currentValue)) {
-//     return TYPE_DATE;
-//   } else if (typeof currentValue === "string") {
-//     // double check if it's really number-ish
-//     if (/^[\d.,]+$/.test(currentValue)) {
-//       return TYPE_NUMBER;
-//     }
-//     return TYPE_STRING;
-//   } else if (Array.isArray(currentValue)) {
-//     return TYPE_ARRAY;
-//   } else if (typeof currentValue === "object") {
-//     return TYPE_OBJECT;
-//   } else if (typeof currentValue === "string") {
-//     return TYPE_STRING;
-//   }
-// }
-
 function getFieldMetadata ({
   currentValue,
   key,
@@ -221,22 +191,10 @@ function getFieldMetadata ({
       length = currentValue.length
       analysis[typeGuess] = { ...analysis[typeGuess], length }
     }
-    // console.log(`Guessed type for ${key}=${typeGuess}`);
-    if (typeGuess === 'Object' && Object.keys(currentValue).length >= 2) {
-      if (recursive) throw new Error('Feature not supported yet!')
-      //    return evaluateSchemaLevel(schema[key], currentValue)
-      // length = Object.keys(currentValue)
-    }
     return analysis
   }, {});
 
   return typeAnalysis
-  // return { typeGuesses, length, precision, scale }
-  // if (priority.indexOf(typeGuess) >= priority.indexOf(currentType)) {
-  //   return typeGuess;
-  // } else {
-  //   return currentType;
-  // }
 }
 
 function getNumberRangeStats (numbers) {
