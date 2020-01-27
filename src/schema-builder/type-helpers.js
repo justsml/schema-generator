@@ -1,7 +1,7 @@
 import isDate from 'lodash.isdate'
 import { isObjectId, isUuid, isDateString, isNumeric } from './utils/type-detectors.js'
 
-function detectTypes(value, fieldName) {
+function detectTypes (value, fieldName) {
   return priority.reduce((types, typeHelper) => {
     if (typeHelper.check(value)) types.push(typeHelper.type)
     return types

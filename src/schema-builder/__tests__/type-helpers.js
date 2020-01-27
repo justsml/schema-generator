@@ -18,18 +18,18 @@ import {
 
 describe('Multiple Type Matching', () => {
   it('correctly handles ambiguous value', () => {
-    let matchResult = detectTypes('')
+    const matchResult = detectTypes('')
     expect(matchResult).toContain('Unknown')
     expect(matchResult.length).toBe(1)
   })
   it('correctly handles Object ID', () => {
-    let matchResult = detectTypes('45cbc4a0e4123f6920000002')
+    const matchResult = detectTypes('45cbc4a0e4123f6920000002')
     expect(matchResult).toContain('ObjectId')
     expect(matchResult).toContain('String')
     expect(matchResult.length).toBe(2)
   })
   it('correctly handles UUID', () => {
-    let matchResult = detectTypes('AB0E1569-B8A1-430F-94BE-B03E5C73FA22')
+    const matchResult = detectTypes('AB0E1569-B8A1-430F-94BE-B03E5C73FA22')
     expect(matchResult).toContain('String')
     expect(matchResult).toContain('UUID')
     expect(matchResult.length).toBe(2)
@@ -44,7 +44,7 @@ describe('Multiple Type Matching', () => {
     expect(matchResult.length).toBe(2)
   })
   it('correctly handles dates', () => {
-    let matchResult = detectTypes('2020-06-12T02:49:23.473Z')
+    const matchResult = detectTypes('2020-06-12T02:49:23.473Z')
     expect(matchResult).toContain('Date')
     expect(matchResult).toContain('String')
     expect(matchResult.length).toBe(2)
@@ -61,7 +61,7 @@ describe('Multiple Type Matching', () => {
     expect(matchResult.length).toBe(3)
   })
   it('correctly handles currency', () => {
-    let matchResult = detectTypes('$420.42')
+    const matchResult = detectTypes('$420.42')
     expect(matchResult).toContain('Currency')
     expect(matchResult).toContain('String')
     expect(matchResult.length).toBe(2)
@@ -87,29 +87,29 @@ describe('Multiple Type Matching', () => {
     expect(matchResult.length).toBe(1)
   })
   it('correctly handles null', () => {
-    let matchResult = detectTypes('null')
+    const matchResult = detectTypes('null')
     expect(matchResult).toContain('Null')
     expect(matchResult).toContain('String')
     expect(matchResult.length).toBe(2)
   })
   it('correctly handles email', () => {
-    let matchResult = detectTypes('a@example.com')
+    const matchResult = detectTypes('a@example.com')
     expect(matchResult).toContain('Email')
     expect(matchResult).toContain('String')
     expect(matchResult.length).toBe(2)
   })
   it('correctly handles string', () => {
-    let matchResult = detectTypes('🚀')
+    const matchResult = detectTypes('🚀')
     expect(matchResult).toContain('String')
     expect(matchResult.length).toBe(1)
   })
   it('correctly handles array', () => {
-    let matchResult = detectTypes([4, 2, 0])
+    const matchResult = detectTypes([4, 2, 0])
     expect(matchResult).toContain('Array')
     expect(matchResult.length).toBe(1)
   })
   it('correctly handles object', () => {
-    let matchResult = detectTypes({oh: 'noes!'})
+    const matchResult = detectTypes({ oh: 'noes!' })
     expect(matchResult).toContain('Object')
     expect(matchResult.length).toBe(1)
   })
@@ -218,5 +218,3 @@ describe('Type Detectors', () => {
     expect(TYPE_OBJECT.check(null)).toBeFalsy()
   })
 })
-
-

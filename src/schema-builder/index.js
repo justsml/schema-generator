@@ -1,20 +1,30 @@
 import { detectTypes } from './type-helpers.js'
-
+import debug from 'debug'
 export { schemaBuilder, condenseFieldData, condenseFieldSizes, getNumberRangeStats }
+
+const log = debug('schema-builder:index')
 
 function schemaBuilder (name, data) {
   if (typeof name !== 'string') throw Error('Argument "name" must be a String')
   if (!Array.isArray(data)) throw Error('Input must be an Array!')
-
-  const detectedSchema = { _uniques: {}, _totalRecords: 0 }
+  log(`Starting`)
+  const detectedSchema = { _uniques: {}, _totalRecords: null }
   return Promise.resolve(data)
     .then(docs => {
-      return docs.reduce(evaluateSchemaLevel, detectedSchema)
+      log(`  About to examine every row & cell. Found ${docs.length} records...`)
+      const pivotedSchema = docs.reduce(evaluateSchemaLevel, detectedSchema)
+      log(`  Extracted data points from Field Type analysis`)
+      return pivotedSchema
     })
-    .then(schema => condenseFieldData(schema._fieldData))
+    .then(schema => condenseFieldData(schema))
     .then(genSchema => {
-      console.log('genSchema', genSchema)
-      return genSchema
+      log(`Built summary from Field Type data.`)
+      console.log('genSchema', JSON.stringify(genSchema, null, 2));
+      return {
+        total: genSchema._totalRecords,
+        uniques: genSchema._uniques,
+        fields: genSchema._fieldData
+      }
     })
 }
 
@@ -22,17 +32,18 @@ function evaluateSchemaLevel (schema, row, index, array) { // eslint-disable-lin
   schema = schema || {}
   schema._uniques = schema._uniques || {}
   schema._fieldData = schema._fieldData || {}
-  schema._totalRecords =
-    schema._totalRecords === undefined ? array.length : schema._totalRecords
-  Object.keys(row).forEach(key => {
+  schema._totalRecords = schema._totalRecords || array.length
+  log(`Processing Row # ${index + 1}/${schema._totalRecords}...`)
+  Object.keys(row).forEach((key, index, array) => {
+    if (index === 0) log(`Found ${array.length} Column(s)!`)
     const typeFingerprint = getFieldMetadata({
       schema,
       key: key,
       currentValue: row[key]
     })
     if (['Number', 'String'].includes(typeFingerprint)) {
-      schema._uniques[key] = schema._uniques[key] || new Set()
-      schema._uniques[key].add(row[key])
+      schema._uniques[key] = schema._uniques[key] || []
+      if (!schema._uniques[key].includes(row[key])) schema._uniques[key].push(row[key])
     }
     // schema._totalRecords += 1;
     schema._fieldData[key] = schema._fieldData[key] || []
@@ -41,35 +52,42 @@ function evaluateSchemaLevel (schema, row, index, array) { // eslint-disable-lin
   return schema
 }
 
-function condenseFieldData(fields) {
-  // const fields = schema._fieldData
+function condenseFieldData (schema) {
+  const fields = schema._fieldData
+  const fieldNames = Object.keys(fields)
+
+  console.log('condenseFieldData', fieldNames)
   const fieldSummary = {}
-  Object.keys(fields)
+  log(`Pre-condenseFieldSizes(fields[fieldName]) for ${fieldNames.length} columns`)
+  fieldNames
     .forEach((fieldName) => {
       fieldSummary[fieldName] = condenseFieldSizes(fields[fieldName])
     })
-  return fieldSummary
+  log(`Post-condenseFieldSizes(fields[fieldName])`)
+  schema._fieldData = fieldSummary
+  log(`Replaced _fieldData with fieldSummary`)
+  return schema
 }
-function condenseFieldSizes(typeSizesList) {
+function condenseFieldSizes (typeSizesList) {
   // const blankTypeSums = () => ({ length: 0, scale: 0, precision: 0 })
   const sumCounts = {}
+  log(`Processing ${typeSizesList.length} type guesses`)
   typeSizesList.map(currentTypeGuesses => {
-
     const typeSizes = Object.entries(currentTypeGuesses)
-    .map(([typeName, { length, scale, precision }]) => {
+      .map(([typeName, { length, scale, precision }]) => {
       // console.log(typeName, JSON.stringify({ length, scale, precision }))
-      sumCounts[typeName] = sumCounts[typeName] || {}
-      if (!sumCounts[typeName].count) sumCounts[typeName].count = 0
-      if (Number.isFinite(length) && !sumCounts[typeName].length) sumCounts[typeName].length = []
-      if (Number.isFinite(scale) && !sumCounts[typeName].scale) sumCounts[typeName].scale = []
-      if (Number.isFinite(precision) && !sumCounts[typeName].precision) sumCounts[typeName].precision = []
+        sumCounts[typeName] = sumCounts[typeName] || {}
+        if (!sumCounts[typeName].count) sumCounts[typeName].count = 0
+        if (Number.isFinite(length) && !sumCounts[typeName].length) sumCounts[typeName].length = []
+        if (Number.isFinite(scale) && !sumCounts[typeName].scale) sumCounts[typeName].scale = []
+        if (Number.isFinite(precision) && !sumCounts[typeName].precision) sumCounts[typeName].precision = []
 
-      sumCounts[typeName].count ++
-      if (length) sumCounts[typeName].length.push(length)
-      if (scale) sumCounts[typeName].scale.push(scale)
-      if (precision) sumCounts[typeName].precision.push(precision)
-      return sumCounts[typeName]
-    })
+        sumCounts[typeName].count++
+        if (length) sumCounts[typeName].length.push(length)
+        if (scale) sumCounts[typeName].scale.push(scale)
+        if (precision) sumCounts[typeName].precision.push(precision)
+        return sumCounts[typeName]
+      })
   })
   /*
   > Example of sumCounts at this point
@@ -79,6 +97,7 @@ function condenseFieldSizes(typeSizesList) {
     Number: { count: 1, length: [ 6 ] }
   }
   */
+  log(`Condensing data points to stats summaries...`)
   const sizeRangeSummary = {}
   Object.entries(sumCounts)
     .map(([typeName, { count, length, precision, scale }]) => {
@@ -88,6 +107,7 @@ function condenseFieldSizes(typeSizesList) {
       if (sumCounts[typeName].precision) sizeRangeSummary[typeName].precision = getNumberRangeStats(sumCounts[typeName].precision)
       if (sumCounts[typeName].count) sizeRangeSummary[typeName].count = sumCounts[typeName].count
     })
+  log(`Done condensing data points...`)
   /*
   > Example of sizeRangeSummary at this point
   {
@@ -106,12 +126,10 @@ function condenseFieldSizes(typeSizesList) {
     }
   }
   */
-  console.log('typeSizes SUM:', sumCounts)
-  console.log(sizeRangeSummary)
+  // console.log('typeSizes SUM:', sumCounts)
+  // console.log(sizeRangeSummary)
   return sizeRangeSummary
 }
-
-
 
 // function condenseFieldData (schema) {
 //   console.log('schema', schema)
@@ -192,14 +210,14 @@ function getFieldMetadata ({
       analysis[typeGuess] = { ...analysis[typeGuess], length }
     }
     return analysis
-  }, {});
+  }, {})
 
   return typeAnalysis
 }
 
 function getNumberRangeStats (numbers) {
   if (!numbers || numbers.length < 1) return undefined
-  numbers = numbers.slice().sort((a, b) => a < b ? -1 : a === b ? 0 : 1);
+  numbers = numbers.slice().sort((a, b) => a < b ? -1 : a === b ? 0 : 1)
   const sum = numbers.reduce((a, b) => a + b, 0)
   return {
     min: numbers[0],
