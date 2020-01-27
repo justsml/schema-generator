@@ -7,19 +7,19 @@ const log = debug('schema-builder:index')
 function schemaBuilder (name, data) {
   if (typeof name !== 'string') throw Error('Argument "name" must be a String')
   if (!Array.isArray(data)) throw Error('Input must be an Array!')
-  log(`Starting`)
+  log('Starting')
   const detectedSchema = { _uniques: {}, _totalRecords: null }
   return Promise.resolve(data)
     .then(docs => {
       log(`  About to examine every row & cell. Found ${docs.length} records...`)
       const pivotedSchema = docs.reduce(evaluateSchemaLevel, detectedSchema)
-      log(`  Extracted data points from Field Type analysis`)
+      log('  Extracted data points from Field Type analysis')
       return pivotedSchema
     })
     .then(schema => condenseFieldData(schema))
     .then(genSchema => {
-      log(`Built summary from Field Type data.`)
-      console.log('genSchema', JSON.stringify(genSchema, null, 2));
+      log('Built summary from Field Type data.')
+      // console.log('genSchema', JSON.stringify(genSchema, null, 2))
       return {
         total: genSchema._totalRecords,
         uniques: genSchema._uniques,
@@ -56,16 +56,16 @@ function condenseFieldData (schema) {
   const fields = schema._fieldData
   const fieldNames = Object.keys(fields)
 
-  console.log('condenseFieldData', fieldNames)
+  // console.log('condenseFieldData', fieldNames)
   const fieldSummary = {}
   log(`Pre-condenseFieldSizes(fields[fieldName]) for ${fieldNames.length} columns`)
   fieldNames
     .forEach((fieldName) => {
       fieldSummary[fieldName] = condenseFieldSizes(fields[fieldName])
     })
-  log(`Post-condenseFieldSizes(fields[fieldName])`)
+  log('Post-condenseFieldSizes(fields[fieldName])')
   schema._fieldData = fieldSummary
-  log(`Replaced _fieldData with fieldSummary`)
+  log('Replaced _fieldData with fieldSummary')
   return schema
 }
 function condenseFieldSizes (typeSizesList) {
@@ -97,7 +97,7 @@ function condenseFieldSizes (typeSizesList) {
     Number: { count: 1, length: [ 6 ] }
   }
   */
-  log(`Condensing data points to stats summaries...`)
+  log('Condensing data points to stats summaries...')
   const sizeRangeSummary = {}
   Object.entries(sumCounts)
     .map(([typeName, { count, length, precision, scale }]) => {
@@ -107,7 +107,7 @@ function condenseFieldSizes (typeSizesList) {
       if (sumCounts[typeName].precision) sizeRangeSummary[typeName].precision = getNumberRangeStats(sumCounts[typeName].precision)
       if (sumCounts[typeName].count) sizeRangeSummary[typeName].count = sumCounts[typeName].count
     })
-  log(`Done condensing data points...`)
+  log('Done condensing data points...')
   /*
   > Example of sizeRangeSummary at this point
   {
@@ -223,8 +223,8 @@ function getNumberRangeStats (numbers) {
     min: numbers[0],
     avg: sum / numbers.length,
     max: numbers[numbers.length - 1],
-    pct30: numbers[parseInt((numbers.length * 0.3), 10)],
-    pct60: numbers[parseInt((numbers.length * 0.6), 10)],
-    pct90: numbers[parseInt((numbers.length * 0.9), 10)]
+    pct30: numbers[parseInt(String(numbers.length * 0.3), 10)],
+    pct60: numbers[parseInt(String(numbers.length * 0.6), 10)],
+    pct90: numbers[parseInt(String(numbers.length * 0.9), 10)]
   }
 }
