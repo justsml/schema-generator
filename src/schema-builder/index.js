@@ -1,12 +1,20 @@
-import { detectTypes } from './type-helpers.js'
 import debug from 'debug'
+// import FP from 'functional-promises';
+// import { detectTypes } from './type-helpers.js'
+// import StatsMap from 'stats-map';
+// import mem from 'mem';
+import { detectTypes } from './type-helpers.js'
+const log = debug('schema-builder:index')
+// const cache = new StatsMap();
+// const detectTypesCached = mem(_detectTypes, { cache, maxAge: 1000 * 600 }) // keep cache up to 10 minutes
+
 export { schemaBuilder, condenseFieldData, condenseFieldSizes, getNumberRangeStats }
 
-const log = debug('schema-builder:index')
 
-function schemaBuilder (name, data) {
+function schemaBuilder (name, data, onProgress = ({totalRows, currentRow, columns}) => {}) {
+  // const { promise, resolve, reject } = FP.unpack()
   if (typeof name !== 'string') throw Error('Argument "name" must be a String')
-  if (!Array.isArray(data)) throw Error('Input must be an Array!')
+  if (!Array.isArray(data)) throw Error('Can\'t process input.\nSupply a JSON Array or CSV w/ named column headers!')
   log('Starting')
   const detectedSchema = { _uniques: {}, _totalRecords: null }
   return Promise.resolve(data)
@@ -19,6 +27,8 @@ function schemaBuilder (name, data) {
     .then(schema => condenseFieldData(schema))
     .then(genSchema => {
       log('Built summary from Field Type data.')
+      // console.
+      // log(`cache.stats:`, cache.stats);
       // console.log('genSchema', JSON.stringify(genSchema, null, 2))
       return {
         total: genSchema._totalRecords,
@@ -26,31 +36,36 @@ function schemaBuilder (name, data) {
         fields: genSchema._fieldData
       }
     })
+
+    function evaluateSchemaLevel (schema, row, index, array) { // eslint-disable-line
+      schema = schema || {}
+      schema._uniques = schema._uniques || {}
+      schema._fieldData = schema._fieldData || {}
+      schema._totalRecords = schema._totalRecords || array.length
+      const fieldNames = Object.keys(row)
+      log(`Processing Row # ${index + 1}/${schema._totalRecords}...`)
+      setTimeout(() => onProgress({ totalRows: schema._totalRecords, currentRow: index + 1, columns: fieldNames }), 0)
+      fieldNames.forEach((key, index, array) => {
+        if (index === 0) log(`Found ${array.length} Column(s)!`)
+        const typeFingerprint = getFieldMetadata({
+          schema,
+          key: key,
+          currentValue: row[key]
+        })
+        const typeNames = Object.keys(typeFingerprint)
+        if (typeNames.includes('Number') || typeNames.includes('String')) {
+          schema._uniques[key] = schema._uniques[key] || []
+          if (!schema._uniques[key].includes(row[key])) schema._uniques[key].push(row[key])
+          // console.log('✅ Tracking Uniques:', key, schema._uniques[key].length)
+        }
+        // schema._totalRecords += 1;
+        schema._fieldData[key] = schema._fieldData[key] || []
+        schema._fieldData[key].push(typeFingerprint)
+      })
+      return schema
+    }
 }
 
-function evaluateSchemaLevel (schema, row, index, array) { // eslint-disable-line
-  schema = schema || {}
-  schema._uniques = schema._uniques || {}
-  schema._fieldData = schema._fieldData || {}
-  schema._totalRecords = schema._totalRecords || array.length
-  log(`Processing Row # ${index + 1}/${schema._totalRecords}...`)
-  Object.keys(row).forEach((key, index, array) => {
-    if (index === 0) log(`Found ${array.length} Column(s)!`)
-    const typeFingerprint = getFieldMetadata({
-      schema,
-      key: key,
-      currentValue: row[key]
-    })
-    if (['Number', 'String'].includes(typeFingerprint)) {
-      schema._uniques[key] = schema._uniques[key] || []
-      if (!schema._uniques[key].includes(row[key])) schema._uniques[key].push(row[key])
-    }
-    // schema._totalRecords += 1;
-    schema._fieldData[key] = schema._fieldData[key] || []
-    schema._fieldData[key].push(typeFingerprint)
-  })
-  return schema
-}
 
 function condenseFieldData (schema) {
   const fields = schema._fieldData
@@ -182,7 +197,7 @@ function getFieldMetadata ({
   schema, // eslint-disable-line
   recursive = false
 }) {
-  const typeGuesses = detectTypes(currentValue, key)
+  const typeGuesses = detectTypes(currentValue)
 
   const typeAnalysis = typeGuesses.reduce((analysis, typeGuess, rank) => {
     let length

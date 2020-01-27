@@ -5,11 +5,6 @@
   "keywords": [],
   "main": "src/index.js",
   "type": "module",
-  "jest": {
-    "setupFilesAfterEnv": [
-      "./node_modules/config/jest/setup.js"
-    ]
-  },
   "standard": {
     "env": [
       "jest"
@@ -20,11 +15,11 @@
     "@material-ui/icons": "4.5.1",
     "csv-parse": "4.8.5",
     "debug": "^4.1.1",
+    "functional-promises": "^1.7.98",
     "lodash.camelcase": "4.3.0",
     "lodash.isdate": "4.0.1",
     "lodash.isnumber": "3.0.3",
     "lodash.snakecase": "4.1.1",
-    "lru-memoize": "^1.1.0",
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "react-scripts": "3.3.0",

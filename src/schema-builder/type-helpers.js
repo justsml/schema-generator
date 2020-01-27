@@ -1,7 +1,17 @@
-import isDate from 'lodash.isdate'
-import { isObjectId, isUuid, isDateString, isNumeric } from './utils/type-detectors.js'
+import {
+  isBoolish,
+  isCurrency,
+  isDateString,
+  isEmailShaped,
+  isFloatish,
+  isNullish,
+  isNumeric,
+  isObjectId,
+  isTimestamp,
+  isUuid
+} from './utils/type-detectors.js'
 
-function detectTypes (value, fieldName) {
+function detectTypes (value) {
   return priority.reduce((types, typeHelper) => {
     if (typeHelper.check(value)) types.push(typeHelper.type)
     return types
@@ -19,37 +29,31 @@ const TYPE_UNKNOWN = {
 }
 const TYPE_OBJECT_ID = {
   type: 'ObjectId',
-  check: value => !!value && isObjectId(value)
+  check: isObjectId
 }
 const TYPE_UUID = {
   type: 'UUID',
-  check: value => !!value && isUuid(value)
+  check: isUuid
 }
 const TYPE_BOOLEAN = {
   type: 'Boolean',
-  check: value => !!value && (typeof value === 'boolean' || /^([YN]|(TRUE)|(FALSE))$/i.test(String(value)))
+  check: isBoolish
 }
 const TYPE_DATE = {
-  type: 'Date', check: value => isDateString(value) || isDate(value)
+  type: 'Date',
+  check: isDateString
 }
 const TYPE_TIMESTAMP = {
-  type: 'Timestamp', check: value => /^[12]\d{12}$/.test(value)
+  type: 'Timestamp',
+  check: isTimestamp
 }
 const TYPE_CURRENCY = {
   type: 'Currency',
-  check: value => {
-    if (value !== null) {
-      return /^\p{Sc}\s?[\d,.]+$/uig.test(value) || /^[\d,.]+\s?\p{Sc}$/uig.test(value)
-    }
-  }
+  check: isCurrency
 }
 const TYPE_FLOAT = {
   type: 'Float',
-  check: value => {
-    if (value !== null) {
-      return !!(isNumeric(String(value)) && /\d\.\d/.test(String(value)) && !Number.isInteger(value))
-    }
-  }
+  check: isFloatish
 }
 const TYPE_NUMBER = {
   type: 'Number',
@@ -59,7 +63,7 @@ const TYPE_NUMBER = {
 }
 const TYPE_EMAIL = {
   type: 'Email',
-  check: value => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/igm.test(value)
+  check: isEmailShaped
 }
 const TYPE_STRING = {
   type: 'String',
@@ -77,7 +81,10 @@ const TYPE_OBJECT = {
     return !Array.isArray(value) && value != null && typeof value === 'object'
   }
 }
-const TYPE_NULL = { type: 'Null', check: value => value === null || /null/i.test(value) }
+const TYPE_NULL = {
+  type: 'Null',
+  check: isNullish
+}
 
 const priority = [
   TYPE_UNKNOWN,

@@ -6,8 +6,8 @@ import { pathToFileURL } from 'url'
  */
 export function getFilePath(filePath) {
   const __dirname = pathToFileURL(import.meta.url).toString().split(':')[1];
-  console.log('__dirname', __dirname)
+  // console.log('__dirname', __dirname)
   const dataPath = path.resolve('..', filePath)
-  console.log('dataPath', dataPath)
+  // console.log('dataPath', dataPath)
   return dataPath
 }
