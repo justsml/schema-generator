@@ -29,7 +29,7 @@ function schemaBuilder (name, data, onProgress = ({totalRows, currentRow, column
       log('Built summary from Field Type data.')
       // console.
       // log(`cache.stats:`, cache.stats);
-      // console.log('genSchema', JSON.stringify(genSchema, null, 2))
+      console.log('genSchema', JSON.stringify(genSchema, null, 2))
       return {
         total: genSchema._totalRecords,
         uniques: genSchema._uniques,
@@ -216,6 +216,10 @@ function getFieldMetadata ({
         analysis[typeGuess] = { ...analysis[typeGuess], precision, scale }
       }
     }
+    if (typeGuess === 'Number') {
+      length = String(currentValue).length
+      analysis[typeGuess] = { ...analysis[typeGuess], length }
+    }
     if (typeGuess === 'String') {
       length = String(currentValue).length
       analysis[typeGuess] = { ...analysis[typeGuess], length }
@@ -238,8 +242,10 @@ function getNumberRangeStats (numbers) {
     min: numbers[0],
     avg: sum / numbers.length,
     max: numbers[numbers.length - 1],
-    pct30: numbers[parseInt(String(numbers.length * 0.3), 10)],
-    pct60: numbers[parseInt(String(numbers.length * 0.6), 10)],
-    pct90: numbers[parseInt(String(numbers.length * 0.9), 10)]
+    percentiles: [
+      numbers[parseInt(String(numbers.length * 0.3), 10)],
+      numbers[parseInt(String(numbers.length * 0.6), 10)],
+      numbers[parseInt(String(numbers.length * 0.9), 10)]
+    ]
   }
 }

@@ -16,43 +16,110 @@ const getFieldLengthArg = (fieldName, maxLength) => {
   return ', 20'
 }
 
+const builderMethodLookup = {
+  unknown: { method: `text`, getOptions: () => [] },
+  objectid: { method: `string`, getOptions: () => [] },
+  uuid: { method: `uuid`, getOptions: () => [] },
+  boolean: { method: `boolean`, getOptions: () => [] },
+  date: { method: `datetime`, getOptions: () => [] },
+  timestamp: { method: `timestamp`, getOptions: () => [] },
+  currency: { method: `float`, getOptions: () => [] },
+  float: { method: `float`, getOptions: () => [] },
+  number: { method: `integer`, getOptions: (typeInfo) => [typeInfo.precision, typeInfo.scale] },
+  email: { method: `string`, getOptions: () => [] },
+  string: { method: `string`, getOptions: () => [] },
+  array: { method: `json`, getOptions: () => [] },
+  object: { method: `json`, getOptions: () => [] },
+  null: {
+    method: `text`, getOptions: (n, v) => {
+      console.error(`WARNING: No Type Detected for Field ${n}! Assuming text column!`);
+      return []
+    }
+  }
+}
+
 export default {
-  render ({ schemaName, results, options }) {
-    console.log(results)
+  render({ schemaName, results, options }) {
+    function getColumnBuilderString(name, types, uniques) {
+      types = types.slice(0)
+        .filter(f => f[0] !== 'Null' && f[0] !== 'Unknown')
+        .filter(f => f[0] !== 'Email')
+        .sort((a, b) => a[1].count > b[1].count ? -1 : a[1].count === b[1].count ? 0 : 1)
+      let [topType, topTypeStats] = types[0]
+      console.log(`topTypeStats`, name, JSON.stringify(types))
+      let { length, scale, precision, count } = topTypeStats
+      topType = topType.toLowerCase()
+
+      let appendChain = '';
+
+      let sizePart = topType === 'string' && name !== 'id'
+        ? getFieldLengthArg(name, length.percentiles[2])
+        : ''
+      if (topType === 'float' && precision && precision.max) {
+        sizePart = `, ${1 + precision.max}, ${scale.max % 2 !== 0 ? scale.max + 1 : scale.max}`
+      }
+      if (name === 'id') appendChain = '.primary()'
+
+
+
+      if (topType === `unknown`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `objectid`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `uuid`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `boolean`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `date`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `timestamp`) return `    table${builderMethodLookup[topType].method}.`
+      if (topType === `currency`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `float`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `number`) {
+        return `    table.${length.max > 2147483647 ? 'bigInteger' : builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      }
+      if (topType === `email`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `string`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `array`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `object`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `null`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === 'null') { topType = 'string' }
+
+      // let typeMethod =
+      //   topType === 'id' && topType === 'number' ? 'serial' : topType
+
+      console.log('FAILED TO MATCH!!!!', topType)
+      console.log('FAILED TO MATCH!!!!', name)
+      console.log('FAILED TO MATCH!!!!', sizePart, appendChain)
+      return `      table.${topType}("${snakecase(
+        name
+      )}"${sizePart})${appendChain};`
+      // topType, topTypeStats
+
+    }
     // results._uniques = undefined;
     // results._totalRecords = undefined;
-    const fieldSummary = results._summary
+    const fieldSummary = results.fields
+    /**
+    salesScore: {
+      "Float": {
+        "scale": { "max": 7 ... },
+        "precision": { "max": 9 ... },
+        "count": 26
+      },
+      "Number": { "count": 26 }
+    }
+    */
+    const fieldDefs = Object.entries(fieldSummary)
+      .map(([fieldName, typeInfo]) => {
+        /**
+        [
+          ["Float", {
+          "scale": { "max": 7 ... },
+          "precision": { "max": 9 ... },
+          "count": 26
+          }],
+          [ "Number", { "count": 26 } ]
+        ]
+        */
+    typeInfo = Object.entries(typeInfo)
+        return getColumnBuilderString(fieldName, typeInfo, results.uniques[fieldName])
 
-    const fieldDefs = fieldSummary
-      .map(f => {
-        const { fieldName, typeRank, typeInfo, sizeInfo } = f
-        let appendChain = ''
-        let topType = (typeRank && typeRank[0] && typeRank[0][0]) || 'String'
-        topType = topType.toLowerCase()
-        if (topType === 'null') { topType = (typeRank && typeRank[1] && typeRank[1][0]) || 'string' }
-        topType = topType.toLowerCase()
-        let typeMethod =
-          fieldName === 'id' && topType === 'number' ? 'serial' : topType
-        let sizePart =
-          topType === 'string' && fieldName !== 'id'
-            ? getFieldLengthArg(fieldName, sizeInfo.max)
-            : ''
-        typeMethod = typeMethod === 'date' ? 'datetime' : typeMethod
-        if (sizeInfo.precision && sizeInfo.precision.max) {
-          typeMethod = 'float'
-          sizePart = `, ${1 + sizeInfo.precision.max}, ${sizeInfo.scale.max}`
-        } else if (topType === 'number' && sizeInfo.max > 2147483647) {
-          typeMethod = 'bigInteger'
-          sizePart = ''
-        } else if (topType === 'number') {
-          typeMethod = 'integer'
-        }
-        if (fieldName === 'id') appendChain = '.primary()'
-        if (typeMethod === 'array' || typeMethod === 'object') { typeMethod = 'json' }
-        // console.log(fieldName, sizeInfo);
-        return `      table.${typeMethod}("${snakecase(
-          f.fieldName
-        )}"${sizePart})${appendChain};`
       })
       .join('\n')
 
@@ -60,20 +127,19 @@ export default {
     return `// More info: http://knexjs.org/#Schema-createTable
 
 exports.up = function up(knex) {
-  return knex.schema
-    .createTable("${tableName}", (table) => {
+  return knex.schema.createTable("${tableName}", (table) => {
 ${fieldDefs.replace(/\\n/gms, '\n')}
-    });
+  });
 };
 
 exports.down = function down(knex) {
-  return knex.schema
-    .dropTableIfExists("${tableName}");
+  return knex.schema.dropTableIfExists("${tableName}");
 };
 
 `
   }
 }
+
 
 /*
 exports.up = function (knex) {
