@@ -12,6 +12,15 @@ export {
   isUuid
 }
 
+const currencies = [
+  `$`, `¢`, `£`, `¤`, `¥`, `֏`, `؋`, `߾`, `߿`, `৲`, `৳`, `৻`,
+  `૱`, `௹`, `฿`, `៛`, `₠`, `₡`, `₢`, `₣`, `₤`, `₥`, `₦`, `₧`,
+  `₨`, `₩`, `₪`, `₫`, `€`, `₭`, `₮`, `₯`, `₰`, `₱`, `₲`, `₳`,
+  `₴`, `₵`, `₶`, `₷`, `₸`, `₹`, `₺`, `₻`, `₼`, `₽`, `₾`, `₿`,
+  `꠸`, `﷼`, `﹩`, `＄`, `￠`, `￡`, `￥`, `￦`,
+  `𑿝`, `𑿞`, `𑿟`, `𑿠`, `𞋿`, `𞲰`
+]
+
 const boolishPattern = /^([YN]|(TRUE)|(FALSE))$/i
 const uuidPattern = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
 const objectIdPattern = /^[a-f\d]{24}$/i
@@ -21,7 +30,8 @@ const currencyPatternUS = /^\p{Sc}\s?[\d,.]+$/uig
 const currencyPatternEU = /^[\d,.]+\s?\p{Sc}$/uig
 const numberishPattern = /^-?[\d.,]+$/
 const floatPattern = /\d\.\d/
-const emailPattern = /^[^@]+@[^@]{2,}\.[^@]{2,}$/
+// const emailPattern = /^[^@]+@[^@]{2,}\.[^@]{2,}[^.]$/
+const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/igm
 const nullishPattern = /null/i
 // const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/igm
 
@@ -59,7 +69,12 @@ function isTimestamp(value) {
 function isCurrency(value) {
   if (value == null) return false
   value = String(value).trim()
-  return value.length < 30 && (currencyPatternUS.test(value) || currencyPatternEU.test(value))
+  const valueSymbol = currencies.find(curSymbol => value.indexOf(curSymbol) > -1)
+  if (!valueSymbol) return false
+  value = value.replace(valueSymbol, ``)
+  return isNumeric(value)
+  // console.log(value, 'currencyPatternUS', currencyPatternUS.test(value), 'currencyPatternEU', currencyPatternEU.test(value));
+  // return currencyPatternUS.test(value) || currencyPatternEU.test(value)
 }
 
 function isNumeric (value, fieldName) {
