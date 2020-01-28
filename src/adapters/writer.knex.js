@@ -16,7 +16,7 @@ const getFieldLengthArg = (fieldName, maxLength) => {
   return ', 20'
 }
 
-const builderMethodLookup = {
+const builderMethods = {
   unknown: { method: `text`, getOptions: () => [] },
   objectid: { method: `string`, getOptions: () => [] },
   uuid: { method: `uuid`, getOptions: () => [] },
@@ -40,13 +40,16 @@ const builderMethodLookup = {
 
 export default {
   render({ schemaName, results, options }) {
+    const fieldSummary = results.fields
+    const uniqueCounts = results.uniques
+
     function getColumnBuilderString(name, types, uniques) {
       types = types.slice(0)
         .filter(f => f[0] !== 'Null' && f[0] !== 'Unknown')
         .filter(f => f[0] !== 'Email')
         .sort((a, b) => a[1].count > b[1].count ? -1 : a[1].count === b[1].count ? 0 : 1)
       let [topType, topTypeStats] = types[0]
-      console.log(`topTypeStats`, name, JSON.stringify(types))
+      console.log(`topTypeStats`, name, uniqueCounts[name], JSON.stringify(types))
       let { length, scale, precision, count } = topTypeStats
       topType = topType.toLowerCase()
 
@@ -62,23 +65,22 @@ export default {
 
 
 
-      if (topType === `unknown`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === `objectid`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === `uuid`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === `boolean`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === `date`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === `timestamp`) return `    table${builderMethodLookup[topType].method}.`
-      if (topType === `currency`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === `float`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `unknown`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `objectid`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `uuid`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `boolean`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `date`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `timestamp`) return `    table${builderMethods[topType].method}.`
+      if (topType === `currency`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `float`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
       if (topType === `number`) {
-        return `    table.${length.max > 2147483647 ? 'bigInteger' : builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+        return `    table.${length.max > 2147483647 ? 'bigInteger' : builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
       }
-      if (topType === `email`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === `string`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === `array`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === `object`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === `null`) return `    table.${builderMethodLookup[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
-      if (topType === 'null') { topType = 'string' }
+      if (topType === `email`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `string`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `array`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `object`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
+      if (topType === `null`) return `    table.${builderMethods[topType].method}("${snakecase(name)}"${sizePart})${appendChain};`
 
       // let typeMethod =
       //   topType === 'id' && topType === 'number' ? 'serial' : topType
@@ -86,15 +88,10 @@ export default {
       console.log('FAILED TO MATCH!!!!', topType)
       console.log('FAILED TO MATCH!!!!', name)
       console.log('FAILED TO MATCH!!!!', sizePart, appendChain)
-      return `      table.${topType}("${snakecase(
-        name
-      )}"${sizePart})${appendChain};`
-      // topType, topTypeStats
-
+      return ` // oh noes, column not recognized`
     }
     // results._uniques = undefined;
     // results._totalRecords = undefined;
-    const fieldSummary = results.fields
     /**
     salesScore: {
       "Float": {

@@ -27,12 +27,17 @@ function schemaBuilder (name, data, onProgress = ({totalRows, currentRow, column
     .then(schema => condenseFieldData(schema))
     .then(genSchema => {
       log('Built summary from Field Type data.')
-      // console.
-      // log(`cache.stats:`, cache.stats);
-      console.log('genSchema', JSON.stringify(genSchema, null, 2))
+      // console.log('genSchema', JSON.stringify(genSchema, null, 2))
+
+      const uniques = Object.keys(genSchema._fieldData)
+      .reduce((uniques, fieldName) => {
+        if (genSchema._uniques[fieldName]) uniques[fieldName] = genSchema._uniques[fieldName].length
+        return uniques
+      }, {})
+
       return {
         total: genSchema._totalRecords,
-        uniques: genSchema._uniques,
+        uniques: uniques,
         fields: genSchema._fieldData
       }
     })
@@ -44,7 +49,7 @@ function schemaBuilder (name, data, onProgress = ({totalRows, currentRow, column
       schema._totalRecords = schema._totalRecords || array.length
       const fieldNames = Object.keys(row)
       log(`Processing Row # ${index + 1}/${schema._totalRecords}...`)
-      setTimeout(() => onProgress({ totalRows: schema._totalRecords, currentRow: index + 1, columns: fieldNames }), 0)
+      onProgress({ totalRows: schema._totalRecords, currentRow: index + 1, columns: fieldNames })
       fieldNames.forEach((key, index, array) => {
         if (index === 0) log(`Found ${array.length} Column(s)!`)
         const typeFingerprint = getFieldMetadata({
@@ -53,11 +58,11 @@ function schemaBuilder (name, data, onProgress = ({totalRows, currentRow, column
           currentValue: row[key]
         })
         const typeNames = Object.keys(typeFingerprint)
-        if (typeNames.includes('Number') || typeNames.includes('String')) {
-          schema._uniques[key] = schema._uniques[key] || []
-          if (!schema._uniques[key].includes(row[key])) schema._uniques[key].push(row[key])
-          // console.log('✅ Tracking Uniques:', key, schema._uniques[key].length)
-        }
+        schema._uniques[key] = schema._uniques[key] || []
+        if (!schema._uniques[key].includes(row[key])) schema._uniques[key].push(row[key])
+        // if (typeNames.includes('Number') || typeNames.includes('String')) {
+        //   // console.log('✅ Tracking Uniques:', key, schema._uniques[key].length)
+        // }
         // schema._totalRecords += 1;
         schema._fieldData[key] = schema._fieldData[key] || []
         schema._fieldData[key].push(typeFingerprint)

@@ -20,11 +20,16 @@ export default function GeneratorForm () {
   const [schemaName, setSchemaName] = useState('User')
   const [inputData, setInputData] = useState('')
   const [schemaOutput, setSchemaOutput] = useState('')
+  const [progress, setProgress] = useState({currentRow: null, totalRows: null, percent: '0'})
+  const onProgress = ({totalRows, currentRow, columns}) => {
+    const percent = ((currentRow / totalRows) * 100.0).toFixed(2)
+    setProgress({totalRows, currentRow, percent})
+  }
 
   const generateSchema = outputMode => {
     return Promise.resolve(inputData)
       .then(parse)
-      .then(data => schemaBuilder(schemaName, data))
+      .then(data => schemaBuilder(schemaName, data, onProgress))
       .then(render(schemaName, outputMode))
       .then(setSchemaOutput)
       .catch(error => {
@@ -128,6 +133,11 @@ export default function GeneratorForm () {
         </button> */}
       </section>
       <section className='output-data p-1'>
+        {progress && progress.currentRow && <div className="progress-message">
+          Processing row #{progress.currentRow}/{progress.totalRows}
+          <br />
+          {progress.percent}%
+          </div>}
         <CodeViewer>
           {schemaOutput === ''
             ? '// 1. Paste sample data\n// 2. Click for the desired output'

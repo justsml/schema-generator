@@ -7,6 +7,13 @@ form.generator {
   flex-direction: row;
 }
 
+.progress-message {
+  text-align: center;
+  font-size: 1.8rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
 .input-data,
 .output-data {
   width: 40vw;

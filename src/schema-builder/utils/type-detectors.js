@@ -31,7 +31,7 @@ const currencyPatternEU = /^[\d,.]+\s?\p{Sc}$/uig
 const numberishPattern = /^-?[\d.,]+$/
 const floatPattern = /\d\.\d/
 // const emailPattern = /^[^@]+@[^@]{2,}\.[^@]{2,}[^.]$/
-const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/igm
+const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const nullishPattern = /null/i
 // const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/igm
 
@@ -90,7 +90,8 @@ function isFloatish (value) {
 function isEmailShaped(value) {
   if (value == null) return false
   value = String(value).trim()
-  return value.length < 80 && emailPattern.test(value)
+  if (value.includes(' ') || !value.includes('@')) return false
+  return value.length >= 6 && value.length < 80 && emailPattern.test(value)
 }
 
 function isNullish (value) {
