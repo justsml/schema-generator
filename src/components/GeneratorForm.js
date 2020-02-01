@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { schemaBuilder } from '../schema-builder'
+import { schemaBuilder } from 'schema-analyzer'
 import { parse } from '../adapters/readers.js'
 import { render } from '../adapters/writers.js'
 import CodeViewer from './CodeViewer'
+
 const MongoDbIcon = () => (
   <svg role='img' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
     <title>MongoDB</title>
@@ -20,16 +21,16 @@ export default function GeneratorForm () {
   const [schemaName, setSchemaName] = useState('User')
   const [inputData, setInputData] = useState('')
   const [schemaOutput, setSchemaOutput] = useState('')
-  const [progress, setProgress] = useState({currentRow: null, totalRows: null, percent: '0'})
-  const onProgress = ({totalRows, currentRow, columns}) => {
+  const [progress, setProgress] = useState({ currentRow: null, totalRows: null, percent: '0' })
+  const onProgress = ({ totalRows, currentRow, columns }) => {
     const percent = ((currentRow / totalRows) * 100.0).toFixed(2)
-    setProgress({totalRows, currentRow, percent})
+    setProgress({ totalRows, currentRow, percent })
   }
 
   const generateSchema = outputMode => {
     return Promise.resolve(inputData)
       .then(parse)
-      .then(data => schemaBuilder(schemaName, data, onProgress))
+      .then(data => schemaBuilder(schemaName, data, { onProgress }))
       .then(render(schemaName, outputMode))
       .then(setSchemaOutput)
       .catch(error => {
@@ -58,6 +59,7 @@ export default function GeneratorForm () {
         setInputData(data)
       })
       .catch(error => {
+        console.error('ERROR:', error)
         setInputData(`Oh noes! Failed to load the ${name} dataset.
           Please file an issue on the project's GitHub Issues.`)
       })
@@ -133,11 +135,14 @@ export default function GeneratorForm () {
         </button> */}
       </section>
       <section className='output-data p-1'>
-        {progress && progress.currentRow && <div className="progress-message">
-          Processing row #{progress.currentRow}/{progress.totalRows}
-          <br />
-          {progress.percent}%
-          </div>}
+        {
+          progress && progress.currentRow &&
+            <div className='progress-message'>
+            Processing row #{progress.currentRow}/{progress.totalRows}
+              <br />
+              {progress.percent}%
+            </div>
+        }
         <CodeViewer>
           {schemaOutput === ''
             ? '// 1. Paste sample data\n// 2. Click for the desired output'

@@ -1,6 +1,5 @@
 import React from 'react'
 import StorageIcon from '@material-ui/icons/Storage'
-
 export default function NavBar () {
   return (
     <nav className='schema-app-nav navbar navbar-expand-lg navbar-dark bg-primary'>
@@ -20,7 +19,7 @@ export default function NavBar () {
 
       <ul className='navbar-nav ml-auto'>
         <li className='nav-item'>
-          <a className='nav-link' href='https://danlevy.net' target='_blank'>
+          <a className='nav-link' href='https://danlevy.net' target='_blank'> {/* eslint-disable-line */}
             Author
           </a>
         </li>
