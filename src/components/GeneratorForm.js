@@ -34,7 +34,7 @@ export default function GeneratorForm () {
       .then(render(schemaName, outputMode))
       .then(setSchemaOutput)
       .catch(error => {
-        setSchemaOutput(`ERROR!   ${error.message}`)
+        setSchemaOutput(`Oh noes! We ran into a problem!\n\n  ${error.message}`)
         console.error(error)
       })
       .then(scrollToOutput)

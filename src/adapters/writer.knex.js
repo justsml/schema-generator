@@ -90,7 +90,6 @@ export default {
 
       types = types.slice(0)
         .filter(f => f[0] !== 'Null' && f[0] !== 'Unknown')
-        .filter(f => f[0] !== 'Email')
         .sort((a, b) => a[1].count > b[1].count ? -1 : a[1].count === b[1].count ? 0 : 1)
       let [topType, topTypeStats] = types[0]
       const { length, scale, precision, value, count: typeCount } = topTypeStats
