@@ -12,12 +12,12 @@ export default function App () {
   const [schema, setSchema] = useState(productResults)
   return (
     <div className='App container'>
-      <NavBar />
+      {/* <NavBar /> */}
       {/* <Header /> */}
       <PopoverWrapper buttonLabel='Advanced Options'>
-        <AdvancedOptionsForm onSave={options => setOptions(options)} className='options-ui' />
+        <AdvancedOptionsForm onSave={options => setOptions(options)} currentOptions={options} className='options-ui' />
       </PopoverWrapper>
-      <GeneratorForm className='generator-form' />
+      <GeneratorForm className='generator-form' onSave={options => setOptions(options)} onSchema={(schema, title) => setSchema(schema)} />
       <SchemaExplorer schemaResults={schema} />
     </div>
   )

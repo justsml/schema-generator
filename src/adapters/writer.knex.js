@@ -36,7 +36,7 @@ necessary, as it'd be confusing and impact performance.
 
 Reduced example - `very sparse` data: [3, 4, 5, 7, 9, 231429]
 */
-const correctForErroneousMaximum = (threshold = 0.30, ninetiethPct, maximum) => {
+const correctForErroneousMaximum = (threshold = 0.10, ninetiethPct, maximum) => {
   const gapLimit = threshold * maximum
   const topTenPercentileRange = maximum - ninetiethPct
   if (topTenPercentileRange > gapLimit) {
@@ -84,7 +84,7 @@ export default {
     const uniqueCounts = results.uniques
     const rowCount = results.rowCount
 
-    function getColumnBuilderString (name, types, uniques) {
+    function getColumnBuilderString (name, types) {
       const dbName = snakecase(name)
       const nullTypeInfo = getMetadataByTypeName('Null', types)
 
@@ -92,30 +92,29 @@ export default {
         .filter(f => f[0] !== 'Null' && f[0] !== 'Unknown')
         .sort((a, b) => a[1].count > b[1].count ? -1 : a[1].count === b[1].count ? 0 : 1)
       let [topType, topTypeStats] = types[0]
-      const { length, scale, precision, value, count: typeCount } = topTypeStats
+
+      const { length, scale, precision, value, unique, nullable, enum: enumData, count: typeCount } = topTypeStats
       topType = topType.toLowerCase()
-      const uniqueness = rowCount / uniques.length
-      // TODO: calculate entropy using a sum of all non-null detected types, not just typeCount
-      const entropy = rowCount / typeCount
-      const nullCount = nullTypeInfo && nullTypeInfo.count
-      console.log('typeStats', name, uniqueCounts[name], { uniqueness, entropy, nullCount }, JSON.stringify(types))
+      // const uniqueness = rowCount / uniques.length
+      // // TODO: calculate entropy using a sum of all non-null detected types, not just typeCount
+      // const entropy = rowCount / typeCount
+      // const nullCount = nullTypeInfo && nullTypeInfo.count
+      // console.log('typeStats', name, uniqueCounts[name], { uniqueness, entropy, nullCount }, JSON.stringify(types))
 
       let appendChain = ''
 
       let sizePart = topType === 'string'
-        ? getFieldLengthArg(name, correctForErroneousMaximum(bogusSizeThreshold, length.percentiles[2], length.max))
+        ? getFieldLengthArg(name, correctForErroneousMaximum(bogusSizeThreshold, length.p99, length.max))
         : ''
 
-      if (topType === 'string' || topType === 'number') {
-        log(`ENUM: Detection haz rows? RowCount=${rowCount} > ENUM_ROW_MIN=${ENUM_DETECTION_ROW_MINIMUM}`, name)
-        log(`ENUM: Uniques Count: uniques.length=${uniques.length} detectEnumLimit=${detectEnumLimit} `, name)
-        if (rowCount > ENUM_DETECTION_ROW_MINIMUM && uniques.length <= detectEnumLimit) {
-          console.info(`ENUM Detected: ${name} (${uniques.length}) \n TODO: Get/add unique values from the SchemaAnalyzer`)
+      if (topType === 'string' || topType === 'number' && enumData && enumData.length > 0) {
+          // console.info(`ENUM Detected: ${name} (${uniques.length}) \n TODO: Get/add unique values from the SchemaAnalyzer`)
+          appendChain += `.enum('${enumData.join("', '")}')`
         }
       }
       if (topType === 'float' && precision && precision.max) {
-        const p = precision.max
-        const s = scale.max
+        const p = correctForErroneousMaximum(bogusSizeThreshold, precision.p99, precision.max)
+        const s = correctForErroneousMaximum(bogusSizeThreshold, scale.p99, scale.max)
         sizePart = `, ${1 + p}, ${s % 2 !== 0 ? s + 1 : s}`
         return `    table.decimal("${dbName}"${sizePart})${appendChain};`
       }
@@ -128,11 +127,11 @@ export default {
       }
       if (name === 'id') appendChain = '.primary()'
 
-      if (uniqueness >= 1 && (topType === 'objectid' || topType === 'uuid' ||
+      if (unique && (topType === 'objectid' || topType === 'uuid' ||
             topType === 'email' || topType === 'string' || topType === 'number')) { // rows have unique values for field
         appendChain = '.unique()'
       }
-      if (entropy >= 0.999) { // likely a not-null type of field
+      if (!nullable) { // likely a not-null type of field
         appendChain = '.notNull()'
       }
 
@@ -151,10 +150,11 @@ export default {
       if (topType === 'object') return `    table.json("${dbName}"${sizePart})${appendChain};`
       if (topType === 'null') return `    table.text("${dbName}")${appendChain};`
     }
+  }
     const fieldDefs = Object.entries(fieldSummary)
       .map(([fieldName, typeInfo]) => {
         typeInfo = Object.entries(typeInfo)
-        return getColumnBuilderString(fieldName, typeInfo, results.uniques[fieldName])
+        return getColumnBuilderString(fieldName, typeInfo)
       })
       .join('\n')
 

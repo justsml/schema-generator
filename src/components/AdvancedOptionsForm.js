@@ -76,11 +76,11 @@ const RangeInputField = ({ name, label, value, control, ...args }) => (<WrapWith
   />
                                                                        </WrapWithLabel>)
 
-export default function AdvancedOptionsForm ({ options, className }) {
+export default function AdvancedOptionsForm ({ options, className, onSave = (opts) => console.log('TODO: Add onSave handler to options form', opts) }) {
   const classes = useStyles()
   const methods = useForm()
   const { handleSubmit, control, reset } = methods
-  const onSubmit = data => console.log(data)
+  const onSubmit = data => onSave && onSave(data)
 
   /*
 strictMatching: true,
@@ -103,10 +103,10 @@ uniqueRowsThreshold: 1.0
         />
       </section>
 
-      <SliderField name='enumMinimumRowCount' label='Enable Enum at # of Rows' value={100} min={0} max={10000} step={10} control={control} />
-      <SliderField name='enumAbsoluteLimit' label='Max # of Unique Value In an Enumeration' value={10} min={0} max={100} step={1} control={control} />
-      <SliderField name='nullableRowsThreshold' label='% of Null Tolerance' value={0.02} min={0.0} max={0.10} step={0.005} control={control} />
-      <SliderField name='uniqueRowsThreshold' label='% Unique Threshold' value={1.0} min={0.80} max={1.0} step={0.005} control={control} />
+      <RangeInputField name='enumMinimumRowCount' label='Enable Enum at # of Rows' value={100} min={0} max={10000} step={10} control={control} />
+      <RangeInputField name='enumAbsoluteLimit' label='Max # of Unique Value In an Enumeration' value={10} min={0} max={100} step={1} control={control} />
+      <RangeInputField name='nullableRowsThreshold' label='% of Null Tolerance' value={0.02} min={0.0} max={0.10} step={0.005} control={control} />
+      <RangeInputField name='uniqueRowsThreshold' label='% Unique Threshold' value={1.0} min={0.80} max={1.0} step={0.005} control={control} />
       <Button type='submit' color='primary'>Save Options</Button>
       <Button type='submit' color='secondary' onClick={reset}>Save Options</Button>
     </form>

@@ -17,20 +17,25 @@ const PostgresIcon = () => (
   </svg>
 )
 
-export default function GeneratorForm () {
+export default function GeneratorForm ({ options = {}, onSchema }) {
   const [schemaName, setSchemaName] = useState('User')
   const [inputData, setInputData] = useState('')
   const [schemaOutput, setSchemaOutput] = useState('')
   const [progress, setProgress] = useState({ currentRow: null, totalRows: null, percent: '0' })
+
   const onProgress = ({ totalRows, currentRow, columns }) => {
     const percent = ((currentRow / totalRows) * 100.0).toFixed(2)
     setProgress({ totalRows, currentRow, percent })
   }
+  const onSchemaCallback = onSchema && onSchema instanceof Function
+    ? (value) => void onSchema(value, schemaName) || value
+    : (value) => value
 
   const generateSchema = outputMode => {
     return Promise.resolve(inputData)
       .then(parse)
       .then(data => schemaBuilder(schemaName, data, { onProgress }))
+      .then(onSchemaCallback)
       .then(render(schemaName, outputMode))
       .then(setSchemaOutput)
       .catch(error => {
@@ -45,12 +50,18 @@ export default function GeneratorForm () {
     output.scrollIntoView({ block: 'start', behavior: 'smooth' })
   }
 
+  const updateSchemaOutput = schemaResults => {
+    onSchemaCallback(schemaResults)
+    setSchemaOutput(schemaResults)
+  }
+
   const loadData = name => {
     let filePath = ''
     if (name === 'products') filePath = 'products-3000.csv'
     if (name === 'listings') filePath = 'real-estate.example.json'
     if (name === 'people') filePath = 'swapi-people.json'
     if (name === 'users') filePath = 'users.example.json'
+    if (!filePath) return
     setInputData(`One moment...\nImporting ${name} dataset...`)
     return fetch(filePath)
       .then(response => response.text())

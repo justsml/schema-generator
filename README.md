@@ -4,7 +4,10 @@
 
 > An Open Source joint by [Dan Levy](https://danlevy.net/) ✨
 
-[Schema **Generator**](https://github.com/justsml/schema-generator) is a web app which relies on it's sister library [Schema **Analyzer**](https://github.com/justsml/schema-analyzer) to provide an automatic code+interface generator - **based purely on provided JSON/CSV data.**
+This project ([Schema **Generator**](https://github.com/justsml/schema-generator)) is a web app with usage example for it's sister library [Schema **Analyzer**](https://github.com/justsml/schema-analyzer). The _Analyzer_ library provides an automatic data type analysis on any given array of objects.
+
+
+The components included here support **JSON/CSV data!**
 
 
 ### Currently Supports...
