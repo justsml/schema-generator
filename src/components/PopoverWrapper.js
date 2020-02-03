@@ -1,33 +1,32 @@
-import React, { useState } from 'react';
-import Popover from '@material-ui/core/Popover';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from 'react'
+import Popover from '@material-ui/core/Popover'
+import Button from '@material-ui/core/Button'
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
   typography: {
-    padding: theme.spacing(2),
-  },
-}));
+    padding: theme.spacing(2)
+  }
+}))
 
-
-export default function PopoverWrapper({buttonLabel = 'Open Menu', children} = {}) {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+export default function PopoverWrapper ({ buttonLabel = 'Open Menu', children } = {}) {
+  const classes = useStyles()
+  const [anchorEl, setAnchorEl] = React.useState(null)
 
   const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
 
   return (
     <div>
-      <Button aria-describedby={id} variant="contained" color="primary" onClick={handleClick}>
+      <Button aria-describedby={id} variant='contained' color='primary' onClick={handleClick}>
         {buttonLabel}
       </Button>
       <Popover
@@ -37,15 +36,15 @@ export default function PopoverWrapper({buttonLabel = 'Open Menu', children} = {
         onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'center',
+          horizontal: 'center'
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'center',
+          horizontal: 'center'
         }}
       >
         {children}
       </Popover>
     </div>
-  );
+  )
 }

@@ -1,66 +1,66 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
-import Input from '@material-ui/core/Input';
-import VolumeUp from '@material-ui/icons/VolumeUp';
-import { Controller } from "react-hook-form";
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import Slider from '@material-ui/core/Slider'
+import Input from '@material-ui/core/Input'
+import VolumeUp from '@material-ui/icons/VolumeUp'
+import { Controller } from 'react-hook-form'
 
 const useStyles = makeStyles({
   root: {
-    width: 250,
+    width: 250
   },
   input: {
-    width: 42,
-  },
-});
+    width: 42
+  }
+})
 
-export default function SliderInput({
+export default function SliderInput ({
   defaultValue = 0,
-  step, min, max,
+  step, min, max
 
 }) {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(defaultValue);
+  const classes = useStyles()
+  const [value, setValue] = React.useState(defaultValue)
 
   const handleSliderChange = (event, newValue) => {
-    setValue(newValue);
-  };
+    setValue(newValue)
+  }
 
   const handleInputChange = event => {
-    setValue(event.target.value === '' ? '' : Number(event.target.value));
-  };
+    setValue(event.target.value === '' ? '' : Number(event.target.value))
+  }
 
   const handleBlur = () => {
     if (value < min) {
-      setValue(min);
+      setValue(min)
     } else if (value > max) {
-      setValue(max);
+      setValue(max)
     }
-  };
+  }
 
   return (
     <div className={classes.root}>
-      <Typography id="input-slider" gutterBottom>
+      <Typography id='input-slider' gutterBottom>
         Volume
       </Typography>
-      <Grid container spacing={2} alignItems="center">
+      <Grid container spacing={2} alignItems='center'>
         <Grid item>
-          {icon ? icon : null}
+          {icon || null}
         </Grid>
         <Grid item xs>
           <Slider
             value={typeof value === 'number' ? value : 0}
             onChange={handleSliderChange}
-            aria-labelledby="input-slider"
+            aria-labelledby='input-slider'
           />
         </Grid>
         <Grid item>
           <Controller as={<Input
             className={classes.input}
             value={value}
-            margin="dense"
+            margin='dense'
             onChange={handleInputChange}
             onBlur={handleBlur}
             inputProps={{
@@ -68,12 +68,12 @@ export default function SliderInput({
               min,
               max,
               type: 'number',
-              'aria-labelledby': 'input-slider',
+              'aria-labelledby': 'input-slider'
             }}
           />}
           />
         </Grid>
       </Grid>
     </div>
-  );
+  )
 }

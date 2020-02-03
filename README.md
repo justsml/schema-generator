@@ -27,9 +27,9 @@ The primary goal is to support any input JSON/CSV and infer as much as possible.
 - [x] Handles error/outliers intelligently
 - [x] Ignores error/outlier records!
 - [x] Smart field name formatting, snake-case vs. camel-case!
-- [ ] Detects unique columns!
-- [ ] Detects enum Fields!
-- [ ] Detects `Not Null` fields!
+- [x] Detects unique columns!
+- [x] Detects enum Fields!
+- [x] Detects `Not Null` fields!
 - [x] Extensible design, add new output/target with ease!
 - [ ] Nested data structure & multi-table relational output - **Coming soon**
 
