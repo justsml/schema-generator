@@ -34,9 +34,9 @@ export default function GeneratorForm ({ options = {}, onSchema }) {
   const generateSchema = outputMode => {
     return Promise.resolve(inputData)
       .then(parse)
-      .then(data => schemaBuilder(schemaName, data, { onProgress }))
+      .then(data => schemaBuilder(data, { onProgress }))
       .then(onSchemaCallback)
-      .then(render(schemaName, outputMode))
+      .then(render({schemaName, options, writer: outputMode}))
       .then(setSchemaOutput)
       .catch(error => {
         setSchemaOutput(`Oh noes! We ran into a problem!\n\n  ${error.message}`)

@@ -65,115 +65,129 @@ const getMetadataByTypeName = (typeName, types) => {
 }
 
 export default {
-  render ({
-    schemaName, results,
-    options = {
-      detectEnumLimit: 20,
-      bogusSizeThreshold: 0.25,
-      notNullThreshold: 0.01,
-      convertMongoIds: true
-    }
+  render({
+    results,
+    options,
+    schemaName
   }) {
-    const {
-      detectEnumLimit,
-      bogusSizeThreshold
-      // notNullThreshold,
-      // convertMongoIds = true
-    } = options || {}
+    const { bogusSizeThreshold = 0.10 } = options || {}
+
     const fieldSummary = results.fields
-    const uniqueCounts = results.uniques
-    const rowCount = results.rowCount
+    // const uniqueCounts = results.uniques
+    // const rowCount = results.rowCount
 
-    function getColumnBuilderString (name, types) {
-      const dbName = snakecase(name)
-      const nullTypeInfo = getMetadataByTypeName('Null', types)
+    const fieldPairs = Object.entries(fieldSummary)
+      .map(([fieldName, fieldInfo]) => {
+        const name = snakecase(fieldName)
+        let { types } = fieldInfo
+        types = Array.isArray(types) ? types : Object.entries(types)
+        types = types.slice(0)
+          .filter(f => f[0] !== 'Null' && f[0] !== 'Unknown')
+          .sort((a, b) => a[1].count > b[1].count ? -1 : a[1].count === b[1].count ? 0 : 1)
+        let [topType, topTypeStats] = types[0]
+        topType = topType.toLowerCase()
+        const { length, scale, precision, value, unique, nullable, enum: enumData, count: typeCount } = topTypeStats
+        console.log('typeStats', fieldName, topType, { length, scale, precision, value, unique, nullable, enumData, typeCount }, JSON.stringify(types))
 
-      types = types.slice(0)
-        .filter(f => f[0] !== 'Null' && f[0] !== 'Unknown')
-        .sort((a, b) => a[1].count > b[1].count ? -1 : a[1].count === b[1].count ? 0 : 1)
-      let [topType, topTypeStats] = types[0]
 
-      const { length, scale, precision, value, unique, nullable, enum: enumData, count: typeCount } = topTypeStats
-      topType = topType.toLowerCase()
-      // const uniqueness = rowCount / uniques.length
-      // // TODO: calculate entropy using a sum of all non-null detected types, not just typeCount
-      // const entropy = rowCount / typeCount
-      // const nullCount = nullTypeInfo && nullTypeInfo.count
-      // console.log('typeStats', name, uniqueCounts[name], { uniqueness, entropy, nullCount }, JSON.stringify(types))
+        let appendChain = ''
 
-      let appendChain = ''
+        let sizePart = topType === 'string'
+          ? getFieldLengthArg(name, correctForErroneousMaximum(bogusSizeThreshold, length.p99, length.max))
+          : ''
 
-      let sizePart = topType === 'string'
-        ? getFieldLengthArg(name, correctForErroneousMaximum(bogusSizeThreshold, length.p99, length.max))
-        : ''
-
-      if (topType === 'string' || topType === 'number' && enumData && enumData.length > 0) {
+        if ((topType === 'string' || topType === 'number') && (enumData && enumData.length > 0)) {
           // console.info(`ENUM Detected: ${name} (${uniques.length}) \n TODO: Get/add unique values from the SchemaAnalyzer`)
           appendChain += `.enum('${enumData.join("', '")}')`
         }
-      }
-      if (topType === 'float' && precision && precision.max) {
-        const p = correctForErroneousMaximum(bogusSizeThreshold, precision.p99, precision.max)
-        const s = correctForErroneousMaximum(bogusSizeThreshold, scale.p99, scale.max)
-        sizePart = `, ${1 + p}, ${s % 2 !== 0 ? s + 1 : s}`
-        return `    table.decimal("${dbName}"${sizePart})${appendChain};`
-      }
-      if (name.toLowerCase() === 'id' && topType === 'number') {
-        if (value.max > BIG_INTEGER_MIN) {
-          return `    table.bigIncrements("${dbName}");`
-        } else {
-          return `    table.increments("${dbName}");`
+
+        if (topType === 'float' && precision && precision.max) {
+          const p = correctForErroneousMaximum(bogusSizeThreshold, precision.p99, precision.max)
+          const s = correctForErroneousMaximum(bogusSizeThreshold, scale.p99, scale.max)
+          sizePart = `, ${1 + p}, ${s % 2 !== 0 ? s + 1 : s}`
+          return `    table.decimal("${name}"${sizePart})${appendChain};`
         }
-      }
-      if (name === 'id') appendChain = '.primary()'
+        if (name.toLowerCase() === 'id' && topType === 'number') {
+          if (value.max > BIG_INTEGER_MIN) {
+            return `    table.bigIncrements("${name}");`
+          } else {
+            return `    table.increments("${name}");`
+          }
+        }
+        if (name === 'id') appendChain += '.primary()'
 
-      if (unique && (topType === 'objectid' || topType === 'uuid' ||
-            topType === 'email' || topType === 'string' || topType === 'number')) { // rows have unique values for field
-        appendChain = '.unique()'
-      }
-      if (!nullable) { // likely a not-null type of field
-        appendChain = '.notNull()'
-      }
+        if (unique && (topType === 'objectid' || topType === 'uuid' ||
+          topType === 'email' || topType === 'string' || topType === 'number')) { // rows have unique values for field
+          appendChain += '.unique()'
+        }
+        if (!nullable) { // likely a not-null type of field
+          appendChain += '.notNull()'
+        }
 
-      if (topType === 'unknown') return `    table.text("${dbName}"${sizePart})${appendChain};`
-      if (topType === 'objectid') return `    table.string("${dbName}", 24);`
-      if (topType === 'uuid') return `    table.uuid("${dbName}"${sizePart})${appendChain};`
-      if (topType === 'boolean') return `    table.boolean("${dbName}"${sizePart})${appendChain};`
-      if (topType === 'date') return `    table.datetime("${dbName}"${sizePart})${appendChain};`
-      if (topType === 'timestamp') return `    table.timestamp("${dbName}"${sizePart})`
-      if (topType === 'currency') return `    table.float("${dbName}"${sizePart});`
-      if (topType === 'float') return `    table.float("${dbName}"${sizePart});`
-      if (topType === 'number') { return `    table.${length.max > BIG_INTEGER_MIN ? 'bigInteger' : 'integer'}("${dbName}")${appendChain};` }
-      if (topType === 'email') return `    table.string("${dbName}"${sizePart})${appendChain};`
-      if (topType === 'string') return `    table.string("${dbName}"${sizePart})${appendChain};`
-      if (topType === 'array') return `    table.json("${dbName}"${sizePart})${appendChain};`
-      if (topType === 'object') return `    table.json("${dbName}"${sizePart})${appendChain};`
-      if (topType === 'null') return `    table.text("${dbName}")${appendChain};`
-    }
-  }
-    const fieldDefs = Object.entries(fieldSummary)
-      .map(([fieldName, typeInfo]) => {
-        typeInfo = Object.entries(typeInfo)
-        return getColumnBuilderString(fieldName, typeInfo)
+        if (topType === 'unknown') return `    table.text("${name}"${sizePart})${appendChain};`
+        if (topType === 'objectid') return `    table.string("${name}", 24);`
+        if (topType === 'uuid') return `    table.uuid("${name}"${sizePart})${appendChain};`
+        if (topType === 'boolean') return `    table.boolean("${name}"${sizePart})${appendChain};`
+        if (topType === 'date') return `    table.datetime("${name}"${sizePart})${appendChain};`
+        if (topType === 'timestamp') return `    table.timestamp("${name}"${sizePart})`
+        if (topType === 'currency') return `    table.float("${name}"${sizePart});`
+        if (topType === 'float') return `    table.float("${name}"${sizePart});`
+        if (topType === 'number') { return `    table.${value.max > BIG_INTEGER_MIN ? 'bigInteger' : 'integer'}("${name}")${appendChain};` }
+        if (topType === 'email') return `    table.string("${name}"${sizePart})${appendChain};`
+        if (topType === 'string') return `    table.string("${name}"${sizePart})${appendChain};`
+        if (topType === 'array') return `    table.json("${name}"${sizePart})${appendChain};`
+        if (topType === 'object') return `    table.json("${name}"${sizePart})${appendChain};`
+        if (topType === 'null') return `    table.text("${name}")${appendChain};`
+
+        return `    table.text("${name}")${appendChain}; // ` + JSON.stringify(topTypeStats)
+
+
       })
-      .join('\n')
-
-    const tableName = snakecase(schemaName)
+        //   const schemaName = snakecase(schemaName)
     return `// More info: http://knexjs.org/#Schema-createTable
 
-exports.up = function up(knex) {
-  return knex.schema.createTable("${tableName}", (table) => {
-${fieldDefs.replace(/\\n/gms, '\n')}
-  });
-};
+    exports.up = function up(knex) {
+      return knex.schema.createTable("${schemaName}", (table) => {
+    ${fieldPairs.join('\n    ')}
+      });
+    };
 
-exports.down = function down(knex) {
-  return knex.schema.dropTableIfExists("${tableName}");
-};
+    exports.down = function down(knex) {
+      return knex.schema.dropTableIfExists("${schemaName}");
+    };
 
-`
+    `
+
+      return fieldPairs
+    // function getColumnBuilderString(name, types) {
+    //   const dbName = snakecase(name)
+    //   const nullTypeInfo = getMetadataByTypeName('Null', types)
+
+    //   types = types.slice(0)
+    //     .filter(f => f[0] !== 'Null' && f[0] !== 'Unknown')
+    //     .sort((a, b) => a[1].count > b[1].count ? -1 : a[1].count === b[1].count ? 0 : 1)
+    //   let [topType, topTypeStats] = types[0]
+    //   const { length, scale, precision, value, unique, nullable, enum: enumData, count: typeCount } = topTypeStats
+    //   // console.log('typeStats', name, {length, scale, precision, value, unique, nullable, enumData, typeCount}, JSON.stringify(types))
+
+    // }
   }
 }
+      // const { length, scale, precision, value, unique, nullable, enum: enumData, count: typeCount } = topTypeStats
+  //     topType = topType.toLowerCase()
+  //     // const uniqueness = rowCount / uniques.length
+  //     // // TODO: calculate entropy using a sum of all non-null detected types, not just typeCount
+  //     // const entropy = rowCount / typeCount
+  //     // const nullCount = nullTypeInfo && nullTypeInfo.count
+  //     // console.log('typeStats', name, uniqueCounts[name], { uniqueness, entropy, nullCount }, JSON.stringify(types))
+
+  //   const fieldDefs = Object.entries(fieldSummary)
+  //     .map(([fieldName, typeInfo]) => {
+  //       typeInfo = Object.entries(typeInfo)
+  //       return getColumnBuilderString(fieldName, typeInfo)
+  //     })
+  //     .join('\n')
+
 
 /*
 exports.up = function (knex) {
