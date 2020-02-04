@@ -55,26 +55,7 @@ export default function GeneratorForm ({ options = {}, onSchema }) {
     setSchemaOutput(schemaResults)
   }
 
-  const loadData = name => {
-    let filePath = ''
-    if (name === 'products') filePath = 'products-3000.csv'
-    if (name === 'listings') filePath = 'real-estate.example.json'
-    if (name === 'people') filePath = 'swapi-people.json'
-    if (name === 'users') filePath = 'users.example.json'
-    if (!filePath) return
-    setInputData(`One moment...\nImporting ${name} dataset...`)
-    return fetch(filePath)
-      .then(response => response.text())
-      .then(data => {
-        setSchemaName(name)
-        setInputData(data)
-      })
-      .catch(error => {
-        console.error('ERROR:', error)
-        setInputData(`Oh noes! Failed to load the ${name} dataset.
-          Please file an issue on the project's GitHub Issues.`)
-      })
-  }
+
   return (
     <form className='form generator w-100' onSubmit={e => e.preventDefault()}>
       <section className='input-data'>

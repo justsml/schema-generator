@@ -92,7 +92,7 @@ export default {
         let appendChain = ''
 
         let sizePart = topType === 'string'
-          ? getFieldLengthArg(name, correctForErroneousMaximum(bogusSizeThreshold, length.p99, length.max))
+          ? `, ${getFieldLengthArg(name, correctForErroneousMaximum(bogusSizeThreshold, length.p99, length.max))}`
           : ''
 
         if ((topType === 'string' || topType === 'number') && (enumData && enumData.length > 0)) {
@@ -113,14 +113,17 @@ export default {
             return `    table.increments("${name}");`
           }
         }
-        if (name === 'id') appendChain += '.primary()'
 
-        if (unique && (topType === 'objectid' || topType === 'uuid' ||
-          topType === 'email' || topType === 'string' || topType === 'number')) { // rows have unique values for field
-          appendChain += '.unique()'
-        }
         if (!nullable) { // likely a not-null type of field
           appendChain += '.notNull()'
+        }
+        if (unique && (topType === 'objectid' || topType === 'uuid' ||
+        topType === 'email' || topType === 'string' || topType === 'number')) { // rows have unique values for field
+          appendChain += '.unique()'
+        }
+        if (name === 'id' && unique) {
+          // Override any possible redundant 'unique' method from above
+          appendChain = '.primary()'
         }
 
         if (topType === 'unknown') return `    table.text("${name}"${sizePart})${appendChain};`

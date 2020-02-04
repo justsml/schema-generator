@@ -15,10 +15,9 @@ form.generator {
 }
 
 .options-ui {
-  max-width: 40vw;
-  padding: 2rem;
-  overflow-y: auto;
-  overflow-x: hidden;
+  .form-group {
+    margin-bottom: 0.5rem;
+  }
 }
 
 .input-data,
@@ -95,4 +94,13 @@ form .field-name {
 .schema-app-nav li {
   padding: auto 1.5rem;
   margin: 0 1.25rem;
+}
+
+.input-panel {
+  height: 95vh;
+  width: 95vw;
+  section: {
+    height: 80vh;
+    width: 80vw;
+  }
 }

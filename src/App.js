@@ -25,10 +25,10 @@ export default function App () {
         onSave={options => {
           setOptions(options)
         }}
-        currentOptions={options}
+        options={options}
         className='options-ui'
       />
-      <GeneratorForm className='generator-form' onSave={options => setOptions(options)} onSchema={(schema, title) => setSchema(schema)} />
+      <GeneratorForm className='generator-form' options={options} onSchema={(schema, title) => setSchema(schema)} />
       <SchemaExplorer schemaResults={schema} />
     </div>
   )
