@@ -21,6 +21,8 @@ export default function PopoverWrapper ({ buttonLabel = 'Open Menu', children } 
     setAnchorEl(null)
   }
 
+  // if (triggerClose) handleClose()
+
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
 
@@ -43,7 +45,7 @@ export default function PopoverWrapper ({ buttonLabel = 'Open Menu', children } 
           horizontal: 'center'
         }}
       >
-        {children}
+        {children instanceof Function ? children({ closeMenu: handleClose }) : children}
       </Popover>
     </div>
   )

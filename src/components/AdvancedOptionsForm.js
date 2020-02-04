@@ -3,18 +3,41 @@ import { useForm, Controller } from 'react-hook-form'
 // import PropTypes from 'prop-types';
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import Slider from '@material-ui/core/Slider'
-import Input from '@material-ui/core/Input'
+// import Input from '@material-ui/core/Input'
 import Checkbox from '@material-ui/core/Checkbox'
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
+import CardActions from '@material-ui/core/CardActions'
+import Collapse from '@material-ui/core/Collapse'
+import SaveIcon from '@material-ui/icons/Save'
+import CloseIcon from '@material-ui/icons/Close'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import RefreshIcon from '@material-ui/icons/Refresh'
+import SettingsIcon from '@material-ui/icons/Settings'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: 300 + theme.spacing(3) * 2
+    maxWidth: '50vw',
+    width: 420 + theme.spacing(3) * 2
   },
   margin: {
     height: theme.spacing(3)
-  }
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)',
+  },
+
 }))
 
 const StyledSlider = withStyles({
@@ -63,24 +86,26 @@ const SliderField = ({ name, label, value, control, ...args }) => (<WrapWithLabe
     defaultValue={value}
   />
 </WrapWithLabel>)
-const RangeInputField = ({ name, label, value, control, ...args }) => (<WrapWithLabel label={label}>
-  <Controller
-    as={<Input
-      valueLabelDisplay='auto'
-      aria-label={label}
-      name={name}
-      control={control}
-      defaultValue={value}
-      {...args}
-        />}
+// React.forwardRef((props, ref) => {
+const RangeInputField = React.forwardRef(({ name, label, value, control, register, ...args }, ref) => (<WrapWithLabel label={label}>
+  <input
+    type='number'
+    name={name}
+    aria-label={label}
+    defaultValue={value}
+    ref={ref}
+    {...args}
   />
-                                                                       </WrapWithLabel>)
+</WrapWithLabel>))
 
 export default function AdvancedOptionsForm ({ options, className, onSave = (opts) => console.log('TODO: Add onSave handler to options form', opts) }) {
   const classes = useStyles()
-  const methods = useForm()
-  const { handleSubmit, control, reset } = methods
-  const onSubmit = data => onSave && onSave(data)
+  const methods = useForm({ defaultValues: options })
+  const { handleSubmit, control, reset, register } = methods
+  const onSubmit = data => {
+    console.log('Saved Options', data)
+    if (onSave) onSave(data)
+  }
 
   /*
 strictMatching: true,
@@ -90,25 +115,80 @@ enumPercentThreshold: 0.01,
 nullableRowsThreshold: 0.02,
 uniqueRowsThreshold: 1.0
 */
-  return (
-    <form className={'schema-options ' + className} onSubmit={handleSubmit(onSubmit)}>
-      <section>
-        <Typography as='label'>Strict Matching: </Typography>
-        <Controller
-          as={<Checkbox name='strictMatching' />}
-          name='strictMatching'
-          value='strict'
-          control={control}
-          defaultValue={false}
-        />
-      </section>
+    const [expanded, setExpanded] = React.useState(false);
 
-      <RangeInputField name='enumMinimumRowCount' label='Enable Enum at # of Rows' value={100} min={0} max={10000} step={10} control={control} />
-      <RangeInputField name='enumAbsoluteLimit' label='Max # of Unique Value In an Enumeration' value={10} min={0} max={100} step={1} control={control} />
-      <RangeInputField name='nullableRowsThreshold' label='% of Null Tolerance' value={0.02} min={0.0} max={0.10} step={0.005} control={control} />
-      <RangeInputField name='uniqueRowsThreshold' label='% Unique Threshold' value={1.0} min={0.80} max={1.0} step={0.005} control={control} />
-      <Button type='submit' color='primary'>Save Options</Button>
-      <Button type='submit' color='secondary' onClick={reset}>Save Options</Button>
-    </form>
+    const handleExpandClick = () => {
+      setExpanded(!expanded);
+    };
+
+  return (
+    <Card className={classes.root}>
+      <CardHeader
+        avatar={
+          <SettingsIcon />
+        }
+        action={
+          <IconButton aria-label='settings' onClick={handleExpandClick}>
+            {expanded ? <CloseIcon /> : <ExpandMoreIcon />}
+          </IconButton>
+        }
+        title='Advanced Options'
+        // subheader='Control Detection Options'
+      />
+
+
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          <form className={'schema-options ' + className} onSubmit={handleSubmit(onSubmit)}>
+            <fieldset className='form-group'>
+              <legend>Unique Detection</legend>
+              <section className='input-group d-flex justify-content-between'>
+                <Typography>Strict Matching</Typography>
+                <Controller
+                  as={<Checkbox name='strictMatching' />}
+                  name='strictMatching'
+                  value='strict'
+                  control={control}
+                />
+              </section>
+            </fieldset>
+
+            <fieldset className='form-group'>
+              <legend>Unique</legend>
+
+              <label className='input-group d-flex justify-content-between'>
+                <Typography>Rows Required to Detect Enumerations</Typography>
+                <input type='number' name='enumMinimumRowCount' defaultValue={100} min={0} max={10000} step={10} ref={register({ min: 0, max: 10000 })} />
+              </label>
+              <label className='input-group d-flex justify-content-between'>
+                <Typography>Max Size of Enumerations</Typography>
+                <input type='number' name='enumAbsoluteLimit' defaultValue={10} min={0} max={100} step={1} ref={register({ min: 0, max: 100 })} />
+              </label>
+            </fieldset>
+
+            <fieldset className='form-group'>
+              <legend>Null Detection</legend>
+              <label className='input-group'>
+                <Typography>'Not Null' % Error Tolerance</Typography>
+                <input type='range' class='custom-range' name='nullableRowsThreshold' defaultValue={0.02} min={0.0} max={0.10} step={0.005} ref={register({ min: 0.0, max: 0.10 })} />
+              </label>
+            </fieldset>
+
+            <fieldset className='form-group'>
+              <legend>Unique Detection</legend>
+              <label className='input-group'>
+                <Typography>% Unique Threshold</Typography>
+                <input type='range' class='custom-range' name='uniqueRowsThreshold' defaultValue={1.0} min={0.80} max={1.0} step={0.005} ref={register({ min: 0.80, max: 1.0 })} />
+              </label>
+            </fieldset>
+
+          </form>
+        </CardContent>
+        <CardActions disableSpacing className="d-flex justify-content-between">
+          <Button variant='contained' type='submit' color='primary' startIcon={<SaveIcon />}>Save</Button>
+          <Button variant='contained' type='reset' color='secondary' startIcon={<RefreshIcon />} onClick={reset}>Reset</Button>
+        </CardActions>
+      </Collapse>
+    </Card>
   )
 }

@@ -65,7 +65,7 @@ const getMetadataByTypeName = (typeName, types) => {
 }
 
 export default {
-  render({
+  render ({
     results,
     options,
     schemaName
@@ -88,7 +88,6 @@ export default {
         topType = topType.toLowerCase()
         const { length, scale, precision, value, unique, nullable, enum: enumData, count: typeCount } = topTypeStats
         console.log('typeStats', fieldName, topType, { length, scale, precision, value, unique, nullable, enumData, typeCount }, JSON.stringify(types))
-
 
         let appendChain = ''
 
@@ -140,10 +139,8 @@ export default {
         if (topType === 'null') return `    table.text("${name}")${appendChain};`
 
         return `    table.text("${name}")${appendChain}; // ` + JSON.stringify(topTypeStats)
-
-
       })
-        //   const schemaName = snakecase(schemaName)
+    //   const schemaName = snakecase(schemaName)
     return `// More info: http://knexjs.org/#Schema-createTable
 
     exports.up = function up(knex) {
@@ -158,7 +155,7 @@ export default {
 
     `
 
-      return fieldPairs
+    return fieldPairs
     // function getColumnBuilderString(name, types) {
     //   const dbName = snakecase(name)
     //   const nullTypeInfo = getMetadataByTypeName('Null', types)
@@ -173,21 +170,20 @@ export default {
     // }
   }
 }
-      // const { length, scale, precision, value, unique, nullable, enum: enumData, count: typeCount } = topTypeStats
-  //     topType = topType.toLowerCase()
-  //     // const uniqueness = rowCount / uniques.length
-  //     // // TODO: calculate entropy using a sum of all non-null detected types, not just typeCount
-  //     // const entropy = rowCount / typeCount
-  //     // const nullCount = nullTypeInfo && nullTypeInfo.count
-  //     // console.log('typeStats', name, uniqueCounts[name], { uniqueness, entropy, nullCount }, JSON.stringify(types))
+// const { length, scale, precision, value, unique, nullable, enum: enumData, count: typeCount } = topTypeStats
+//     topType = topType.toLowerCase()
+//     // const uniqueness = rowCount / uniques.length
+//     // // TODO: calculate entropy using a sum of all non-null detected types, not just typeCount
+//     // const entropy = rowCount / typeCount
+//     // const nullCount = nullTypeInfo && nullTypeInfo.count
+//     // console.log('typeStats', name, uniqueCounts[name], { uniqueness, entropy, nullCount }, JSON.stringify(types))
 
-  //   const fieldDefs = Object.entries(fieldSummary)
-  //     .map(([fieldName, typeInfo]) => {
-  //       typeInfo = Object.entries(typeInfo)
-  //       return getColumnBuilderString(fieldName, typeInfo)
-  //     })
-  //     .join('\n')
-
+//   const fieldDefs = Object.entries(fieldSummary)
+//     .map(([fieldName, typeInfo]) => {
+//       typeInfo = Object.entries(typeInfo)
+//       return getColumnBuilderString(fieldName, typeInfo)
+//     })
+//     .join('\n')
 
 /*
 exports.up = function (knex) {

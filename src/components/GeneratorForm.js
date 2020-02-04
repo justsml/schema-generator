@@ -36,7 +36,7 @@ export default function GeneratorForm ({ options = {}, onSchema }) {
       .then(parse)
       .then(data => schemaBuilder(data, { onProgress }))
       .then(onSchemaCallback)
-      .then(render({schemaName, options, writer: outputMode}))
+      .then(render({ schemaName, options, writer: outputMode }))
       .then(setSchemaOutput)
       .catch(error => {
         setSchemaOutput(`Oh noes! We ran into a problem!\n\n  ${error.message}`)
