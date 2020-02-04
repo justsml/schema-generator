@@ -13,6 +13,7 @@ import { useHistory } from 'react-router-dom'
 export default function ChooseInput ({ text = '', onSelect, reset, children }) {
   const history = useHistory()
   const wrapSelect = (arg) => {
+    console.warn('SELECTED:', arg)
     onSelect(arg)
     history.push('/input')
   }

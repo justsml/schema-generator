@@ -6,9 +6,11 @@
 
 This project ([Schema **Generator**](https://github.com/justsml/schema-generator)) is a web app with usage example for it's sister library [Schema **Analyzer**](https://github.com/justsml/schema-analyzer). The _Analyzer_ library provides an automatic data type analysis on any given array of objects.
 
-
 The components included here support **JSON/CSV data!**
 
+## Mini Demo
+
+![./demo_80.gif](./demo_80.gif "using built-in sample analysis")
 
 ### Currently Supports...
 

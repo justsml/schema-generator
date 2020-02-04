@@ -12,18 +12,32 @@ export default function InputProcessor ({
   inputData = '',
   setInputData,
   setStatusMessage,
+  setSchemaName,
   className = ''
 }) {
-  const { source: name } = useParams()
+  // const { source: name } = useParams()
   const history = useHistory()
 
-  const loadData = () => {
+  const loadData = (name) => {
     let filePath = ''
-    if (name === 'products') filePath = '/products-3000.csv'
-    if (name === 'listings') filePath = '/real-estate.example.json'
-    if (name === 'people') filePath = '/swapi-people.json'
-    if (name === 'users') filePath = '/users.example.json'
+    if (/products/i.test(name)) {
+      filePath = 'products-3000.csv'
+      name = 'products'
+    }
+    if (/listings/i.test(name)) {
+      filePath = 'real-estate.example.json'
+      name = 'listings'
+    }
+    if (/people/i.test(name)) {
+      filePath = 'swapi-people.json'
+      name = 'people'
+    }
+    if (/users/i.test(name)) {
+      filePath = 'users.example.json'
+      name = 'users'
+    }
     if (!filePath) return ''
+    setSchemaName(name)
     setStatusMessage(`One moment...\nImporting ${name} dataset...`)
     return fetch(filePath)
       .then(response => response.text())
@@ -38,9 +52,9 @@ export default function InputProcessor ({
       })
   }
 
-  React.useEffect(() => {
-    loadData()
-  }, [name])
+  // React.useEffect(() => {
+  //   loadData()
+  // }, [name])
 
   const textareaOpts = hasInputData ? { rowsMin: 14 } : { rowsMin: 9 }
   if (hasInputData) {
@@ -53,7 +67,7 @@ export default function InputProcessor ({
       <TextareaAutosize
         className='w-100 h-100 border-0 m-1 p-1'
         aria-label='Input or Paste your CSV or JSON data'
-        placeholder='Paste your data here or Start Again to choose a Sample Data Set'
+        placeholder='Paste your data here, or click "Start Here" to choose a Sample Data Set'
         value={inputData}
         onChange={e => setInputData(e.target.value)}
         {...textareaOpts}
