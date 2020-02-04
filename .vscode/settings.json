@@ -1,0 +1,17 @@
+{
+  "standard.validate": [
+    "javascript",
+    "javascriptreact",
+    "html"
+  ],
+  "standard.options": {
+    "plugins": ["html"]
+  },
+  "standard.autoFixOnSave": true,
+  "standard.run": "onType",
+  "standard.enable": true,
+  "standard.usePackageJson": true,
+  "javascript.validate.enable": false,
+  "json.format.enable": false
+  // "editor.defaultFormatter": "chenxsan.vscode-standardjs"
+}

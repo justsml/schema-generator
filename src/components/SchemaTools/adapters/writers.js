@@ -6,9 +6,9 @@ const writers = {
   knex: knexWriter
 }
 
-export const render = (schemaName, writer) => content => {
+export const render = ({ schemaName, options, writer }) => (content) => {
   const renderer = writers[writer]
   if (!renderer) throw new Error(`Invalid Render Adapter Specified: ${writer}`)
 
-  return renderer.render({ schemaName, results: content })
+  return renderer.render({ schemaName, options, results: content })
 }
