@@ -40,10 +40,22 @@ export default function SchemaTools ({}) {
 
   const loadData = name => {
     let filePath = ''
-    if (/products/i.test(name)) filePath = 'products-3000.csv'
-    if (/listings/i.test(name)) filePath = 'real-estate.example.json'
-    if (/people/i.test(name)) filePath = 'swapi-people.json'
-    if (/users/i.test(name)) filePath = 'users.example.json'
+    if (/products/i.test(name)) {
+      filePath = 'products-3000.csv'
+      name = 'products'
+    }
+    if (/listings/i.test(name)) {
+      filePath = 'real-estate.example.json'
+      name = 'listings'
+    }
+    if (/people/i.test(name)) {
+      filePath = 'swapi-people.json'
+      name = 'people'
+    }
+    if (/users/i.test(name)) {
+      filePath = 'users.example.json'
+      name = 'users'
+    }
     if (!filePath) {
       setStatusMessage('')
       setInputData('')
@@ -51,8 +63,8 @@ export default function SchemaTools ({}) {
     }
     setStatusMessage(`One moment...\nImporting ${name} dataset...`)
     return fetch(filePath)
-      .then(response => response.text())
-      .then(data => {
+    .then(response => response.text())
+    .then(data => {
         setSchemaName(name)
         setInputData(data)
         setStatusMessage('Loaded Sample Dataset 🎉')
@@ -75,7 +87,7 @@ export default function SchemaTools ({}) {
       style={{ height: 60 }} variant='h3'
       className='field-overlay help-message position-absolute w-100 text-center flex-shrink-1'
     >
-        Paste your JSON or CSV data&#160;
+        👉 Paste your JSON + CSV here!&#160;👈
            </Typography>
   }
 
@@ -139,6 +151,7 @@ export default function SchemaTools ({}) {
             inputData={inputData}
             setInputData={setInputData}
             setStatusMessage={setStatusMessage}
+            setSchemaName={setSchemaName}
             hasInputData={hasInputData}
           />
         </Route>

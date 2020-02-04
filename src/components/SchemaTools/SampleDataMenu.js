@@ -16,7 +16,7 @@ export default function SampleDataMenu ({ options = [], onSelect = (value, index
   const [selectedIndex, setSelectedIndex] = React.useState(1)
   const anchorRef = React.useRef(null)
 
-  const handleClick = () => {
+  const handleClick = (selectedIndex) => {
     if (onSelect) {
       return onSelect(options[selectedIndex], selectedIndex)
     }
@@ -26,7 +26,7 @@ export default function SampleDataMenu ({ options = [], onSelect = (value, index
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index)
     setOpen(false)
-    handleClick()
+    handleClick(index)
   }
 
   const handleToggle = () => {
