@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import './styles.scss'
-import Header from './components/Header'
-import NavBar from './components/NavBar'
+// import Header from './components/Header'
+// import NavBar from './components/NavBar'
 import GeneratorForm from './components/GeneratorForm'
 import SchemaExplorer from './components/SchemaExplorer'
 import AdvancedOptionsForm from './components/AdvancedOptionsForm'
-import PopoverWrapper from './components/PopoverWrapper'
+// import PopoverWrapper from './components/PopoverWrapper'
 
 export default function App () {
   const [options, setOptions] = useState({
@@ -33,7 +33,6 @@ export default function App () {
     </div>
   )
 }
-
 
 // const typesList = [
 //   'Unknown',

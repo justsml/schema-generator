@@ -14,9 +14,10 @@ import ChooseInput from './ChooseInput'
 import AdvancedOptionsForm from './AdvancedOptionsForm';
 import InputProcessor from './InputProcessor.js'
 import { Button } from '@material-ui/core';
+import CodeViewer from './ResultsView/CodeViewer.js';
 
 export default function SchemaTools({}) {
-  const [schemaResults, setSchemaResults] = React.useState('')
+  const [schemaResults, setSchemaResults] = React.useState(null)
   const [inputData, setInputData] = React.useState('')
   const [statusMessage, setStatusMessage] = React.useState('')
   const [options, setOptions] = React.useState({
@@ -27,6 +28,19 @@ export default function SchemaTools({}) {
     nullableRowsThreshold: 0.02,
     uniqueRowsThreshold: 1.0
   })
+
+  const getSchemaResults = outputMode => {
+    return Promise.resolve(inputData)
+      .then(parse)
+      .then(data => schemaBuilder(data, options))
+      .then(setSchemaResults)
+      .catch(error => {
+        setSchemaOutput(`Oh noes! We ran into a problem!\n\n  ${error.message}`)
+        console.error(error)
+      })
+  }
+
+
 
   const loadData = name => {
     let filePath = ''
@@ -71,15 +85,18 @@ export default function SchemaTools({}) {
       <Route exact path="/">
         <h1>Welcome! Click continue.</h1>
         <h4>TODO: Insert recording of app</h4>
-        <ChooseInput onSelect={} />
+        <ChooseInput onSelect={loadData} />
       </Route>
       <Route path="/input/:source?">
         <InputProcessor currentData={inputData} onSave={setInputData}>
-          <Button>Next</Button>
+          <Button onClick={() => getSchemaResults('knex')}>Knex Migrations</Button>
+          <Button onClick={() => getSchemaResults('mongoose')}>MongoDB/Mongoose Schema</Button>
         </InputProcessor>
       </Route>
       <Route path="/generator/:adapter?">
-        <Dashboard />
+        <CodeViewer>
+          {generatedCode ? generatedCode : `// No code to view, please check your settings.`}
+        </CodeViewer>
       </Route>
     </Switch>
 

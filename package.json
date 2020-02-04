@@ -6,6 +6,13 @@
   "main": "src/index.js",
   "type": "module",
   "standard": {
+    "ignore": [
+      "node_modules/**"
+    ],
+    "plugins": [
+      "html"
+    ],
+    "parser": "babel-eslint",
     "env": [
       "jest",
       "browser"
@@ -35,6 +42,7 @@
   },
   "devDependencies": {
     "@types/jest": "24.9.0",
+    "eslint-plugin-html": "^6.0.0",
     "husky": "^4.2.1",
     "jest": "24.9.0",
     "node-sass": "^4.13.1",

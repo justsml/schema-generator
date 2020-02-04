@@ -6,7 +6,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
-import Paper from '@material-ui/core/Paper';
+import Paper from '@material-ui/core/Paper'
 import Slider from '@material-ui/core/Slider'
 // import Input from '@material-ui/core/Input'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -42,11 +42,11 @@ const useStyles = makeStyles(theme => ({
     transform: 'rotate(0deg)',
     marginLeft: 'auto',
     transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
+      duration: theme.transitions.duration.shortest
+    })
   },
   expandOpen: {
-    transform: 'rotate(180deg)',
+    transform: 'rotate(180deg)'
   },
   form: {
     width: '100%'
@@ -97,7 +97,7 @@ const useStyles = makeStyles(theme => ({
 const percentFormatter = new Intl.NumberFormat({ style: 'percent', minimumFractionDigits: 2 })
 const formatPercent = number => number != null && Number(percentFormatter.format(number)).toFixed(2)
 
-export default function AdvancedOptionsForm({
+export default function AdvancedOptionsForm ({
   options = {
     strictMatching: true,
     enumMinimumRowCount: 100,
@@ -124,7 +124,7 @@ export default function AdvancedOptionsForm({
     setExpanded(false)
   }
 
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(false)
 
   const handleExpandClick = (e) => {
     if (e && e.preventDefault) e.preventDefault()
@@ -137,28 +137,27 @@ export default function AdvancedOptionsForm({
   return (
     <Card className={classes.root} raised={false}>
       <CardHeader
-        disableTypography={true}
+        disableTypography
         // title={<h4>Advanced Options</h4>}
         onClick={handleExpandClick}
         className={classes.header}
         // avatar={<SettingsIcon />}
-        title={<IconButton aria-label='open settings panel' onClick={handleExpandClick} title="Advanced Options">
+        title={<IconButton aria-label='open settings panel' onClick={handleExpandClick} title='Advanced Options'>
           {expanded ? <CloseIcon aria-label='Close' /> : <SettingsIcon aria-label='Open Advanced Options' />}
         </IconButton>}
       // subheader='Control Detection Options'
       />
 
-
-      <Collapse in={expanded} className={classes.panel} timeout="auto">
+      <Collapse in={expanded} className={classes.panel} timeout='auto'>
         <form className={'schema-options ' + className + ' ' + classes.form} onSubmit={handleSubmit(onSubmit)}>
           <Paper elevation={3} className={classes.panelContent}>
-            <CardContent className="pb-1 px-3 pt-2">
+            <CardContent className='pb-1 px-3 pt-2'>
               <fieldset className='form-group'>
                 <legend className='mb-1'>Global Rules</legend>
                 <section className='input-group d-flex justify-content-between'>
                   <Typography>Strict Matching</Typography>
                   <Controller
-                    as={<Checkbox name='strictMatching' style={{padding: '0'}} />}
+                    as={<Checkbox name='strictMatching' style={{ padding: '0' }} />}
                     name='strictMatching'
                     value='strict'
                     defaultValue={options.strictMatching}
@@ -208,12 +207,12 @@ export default function AdvancedOptionsForm({
                 </div>
               </div> */}
             </CardContent>
-            <CardActions disableSpacing className="d-flex justify-content-around">
-            <ButtonGroup size='small'>
-              <IconButton type='button' color='secondary' onClick={handleExpandClick} title="Close"><CloseIcon /></IconButton>
-              {/* <IconButton type='reset' color='default' onClick={reset} title="Reset"><RefreshIcon /></IconButton> */}
-            </ButtonGroup>
-            <Button variant='contained' type='submit' color='primary' startIcon={<SaveIcon />}>Save</Button>
+            <CardActions disableSpacing className='d-flex justify-content-around'>
+              <ButtonGroup size='small'>
+                <IconButton type='button' color='secondary' onClick={handleExpandClick} title='Close'><CloseIcon /></IconButton>
+                {/* <IconButton type='reset' color='default' onClick={reset} title="Reset"><RefreshIcon /></IconButton> */}
+              </ButtonGroup>
+              <Button variant='contained' type='submit' color='primary' startIcon={<SaveIcon />}>Save</Button>
             </CardActions>
           </Paper>
         </form>
