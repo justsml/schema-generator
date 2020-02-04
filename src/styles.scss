@@ -96,11 +96,39 @@ form .field-name {
   margin: 0 1.25rem;
 }
 
-.input-panel {
-  height: 95vh;
-  width: 95vw;
-  section: {
-    height: 80vh;
-    width: 80vw;
+.main-panel {
+  min-height: 40vh;
+  .panel {
+    min-height: 140px !important;
+    // h6: {
+    //   margin: 1rem 0 !important;
+    // }
+  }
+}
+
+// .input-panel {
+//   height: 95vh;
+//   width: 95vw;
+//   section: {
+//     height: 80vh;
+//     width: 80vw;
+//   }
+// }
+
+.field-overlay {
+  transition: opacity 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.appears-valid {
+  .success-message {
+    pointer-events: all;
+    & :hover {
+      pointer-events: all;
+      opacity: 0.5 !important;
+    }
+    opacity: 0.975 !important;
+  }
+  .help-message {
+    pointer-events: none;
+    opacity: 1;
   }
 }

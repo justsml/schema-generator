@@ -1,62 +1,68 @@
 import React from 'react'
 import Paper from '@material-ui/core/Paper'
-import { Link } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 // import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 // import ChevronRight from '@material-ui/icons/ChevronRightOutlined'
 
 export default function InputProcessor ({
-  children, onSave,
-  currentData = '', className = ''
+  hasInputData,
+  displayStatus,
+  inputData = '',
+  setInputData,
+  setStatusMessage,
+  className = ''
 }) {
   const { source: name } = useParams()
+  const history = useHistory()
 
-  const loadData = React.useCallback(() => {
+  const loadData = () => {
     let filePath = ''
-    if (name === 'products') filePath = 'products-3000.csv'
-    if (name === 'listings') filePath = 'real-estate.example.json'
-    if (name === 'people') filePath = 'swapi-people.json'
-    if (name === 'users') filePath = 'users.example.json'
+    if (name === 'products') filePath = '/products-3000.csv'
+    if (name === 'listings') filePath = '/real-estate.example.json'
+    if (name === 'people') filePath = '/swapi-people.json'
+    if (name === 'users') filePath = '/users.example.json'
     if (!filePath) return ''
-    setInputData(`One moment...\nImporting ${name} dataset...`)
+    setStatusMessage(`One moment...\nImporting ${name} dataset...`)
     return fetch(filePath)
       .then(response => response.text())
       .then(data => {
-        setSchemaName(name)
+        // setSchemaName(name)
         setInputData(data)
       })
       .catch(error => {
         console.error('ERROR:', error)
-        setInputData(`Oh noes! Failed to load the ${name} dataset.
+        setStatusMessage(`Oh noes! Failed to load the ${name} dataset.
             Please file an issue on the project's GitHub Issues.`)
       })
-  },
-  [name]
-  )
+  }
 
   React.useEffect(() => {
     loadData()
   }, [name])
 
+  const textareaOpts = hasInputData ? { rowsMin: 14 } : { rowsMin: 9 }
+  if (hasInputData) {
+    className += ' appears-valid'
+  }
   return <Paper elevation={3} className={className}>
-    <section className='w-100 h-100 d-flex flex-column align-items-center'>
-      <Typography style={{ height: 60 }} variant='h3' className='field-name'>
-        Paste your JSON or CSV data&#160;
-      </Typography>
+    <section className='position-relative w-100 h-100 d-flex flex-column align-items-center justify-content-center '>
+      {displayStatus(() => history.push('/results/code/knex'))}
+
       <TextareaAutosize
-        className='flex-fill'
+        className='w-100 h-100 border-0 m-1 p-1'
         aria-label='Input or Paste your CSV or JSON data'
-        rowsMin={9}
-        placeholder='Paste your data here or select a Sample Set'
+        placeholder='Paste your data here or Start Again to choose a Sample Data Set'
         value={inputData}
         onChange={e => setInputData(e.target.value)}
+        {...textareaOpts}
       />
       {/* <textarea
         className='muted w-100 h-100'
 
       /> */}
-      {children}
+      {/* {children} */}
     </section>
   </Paper>
 }

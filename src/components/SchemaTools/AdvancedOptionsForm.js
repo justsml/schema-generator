@@ -22,19 +22,19 @@ import SettingsIcon from '@material-ui/icons/Settings'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    // minWidth: '30px',
-    width: 48 + theme.spacing(3) * 2,
-    maxWidth: '64px',
-    maxHeight: '64px',
-    "& [type='range']": {
-      width: 110
-    }
+    transform: 'scale(1.25)',
+    margin: '0',
+    width: '42px',
+    minWidth: '0',
+    maxWidth: '42px',
+    marginRight: '-30px',
+    marginTop: '-10px'
   },
-  header: {
-    padding: '0.5rem',
-    maxWidth: '64px',
-    maxHeight: '64px'
-  },
+  // header: {
+  //   padding: '0.5rem',
+  //   maxWidth: '64px',
+  //   maxHeight: '64px'
+  // },
   margin: {
     height: theme.spacing(3)
   },
@@ -49,7 +49,13 @@ const useStyles = makeStyles(theme => ({
     transform: 'rotate(180deg)'
   },
   form: {
-    width: '100%'
+    width: '100%',
+    "& [type='range']": {
+      width: 110
+    }
+  },
+  parentPanel: {
+
   },
   panel: {
     position: 'absolute'
@@ -135,69 +141,69 @@ export default function AdvancedOptionsForm ({
   const displayUniqueRowsThreshold = 100 - formatPercent(100.0 * watch('uniqueRowsThreshold'))
 
   return (
-    <Card className={classes.root} raised={false}>
-      <CardHeader
-        disableTypography
-        // title={<h4>Advanced Options</h4>}
+    <>
+      <Button
+        className={classes.root + ' py-2'}
+        aria-label='open settings panel'
         onClick={handleExpandClick}
-        className={classes.header}
-        // avatar={<SettingsIcon />}
-        title={<IconButton aria-label='open settings panel' onClick={handleExpandClick} title='Advanced Options'>
-          {expanded ? <CloseIcon aria-label='Close' /> : <SettingsIcon aria-label='Open Advanced Options' />}
-        </IconButton>}
-      // subheader='Control Detection Options'
-      />
+        disableRipple
+        title='Advanced Options'
+      >
+        {expanded
+          ? <CloseIcon aria-label='Close' />
+          : <SettingsIcon aria-label='Open Advanced Options' />}
+      </Button>
+      <Card raised={false} style={{ marginLeft: '-300px' }}>
+        <Collapse in={expanded} className={classes.panel} timeout='auto'>
+          <form className={'schema-options ' + className + ' ' + classes.form} onSubmit={handleSubmit(onSubmit)}>
+            <Paper elevation={3} className={classes.panelContent}>
+              <CardContent className='pb-1 px-3 pt-2'>
+                <fieldset className='form-group'>
+                  <legend className='mb-1'>Global Rules</legend>
+                  <section className='input-group d-flex justify-content-between'>
+                    <Typography>Strict Matching</Typography>
+                    <Controller
+                      as={<Checkbox name='strictMatching' style={{ padding: '0' }} />}
+                      name='strictMatching'
+                      value='strict'
+                      defaultValue={options.strictMatching}
+                      control={control}
+                    />
+                  </section>
+                </fieldset>
 
-      <Collapse in={expanded} className={classes.panel} timeout='auto'>
-        <form className={'schema-options ' + className + ' ' + classes.form} onSubmit={handleSubmit(onSubmit)}>
-          <Paper elevation={3} className={classes.panelContent}>
-            <CardContent className='pb-1 px-3 pt-2'>
-              <fieldset className='form-group'>
-                <legend className='mb-1'>Global Rules</legend>
-                <section className='input-group d-flex justify-content-between'>
-                  <Typography>Strict Matching</Typography>
-                  <Controller
-                    as={<Checkbox name='strictMatching' style={{ padding: '0' }} />}
-                    name='strictMatching'
-                    value='strict'
-                    defaultValue={options.strictMatching}
-                    control={control}
-                  />
-                </section>
-              </fieldset>
+                <fieldset className='form-group'>
+                  <legend className='mb-1'>Enumerations</legend>
 
-              <fieldset className='form-group'>
-                <legend className='mb-1'>Enumerations</legend>
+                  <label className='input-group d-flex justify-content-between'>
+                    <Typography>Min. Rows for Enumerations</Typography>
+                    <input type='number' name='enumMinimumRowCount' defaultValue={100} min={0} max={10000} step={10} title='Between 0-10000, Default: 100' ref={register({ min: 0, max: 10000 })} />
+                  </label>
+                  <label className='input-group d-flex justify-content-between'>
+                    <Typography>Enumeration Item Limit</Typography>
+                    <input type='number' name='enumAbsoluteLimit' defaultValue={10} min={0} max={100} step={1} title='Between 0-100, Default=10' ref={register({ min: 0, max: 100 })} />
+                  </label>
+                </fieldset>
 
-                <label className='input-group d-flex justify-content-between'>
-                  <Typography>Min. Rows for Enumerations</Typography>
-                  <input type='number' name='enumMinimumRowCount' defaultValue={100} min={0} max={10000} step={10} title='Between 0-10000, Default: 100' ref={register({ min: 0, max: 10000 })} />
-                </label>
-                <label className='input-group d-flex justify-content-between'>
-                  <Typography>Enumeration Item Limit</Typography>
-                  <input type='number' name='enumAbsoluteLimit' defaultValue={10} min={0} max={100} step={1} title='Between 0-100, Default=10' ref={register({ min: 0, max: 100 })} />
-                </label>
-              </fieldset>
+                <fieldset className='form-group'>
+                  <legend className='mb-1'>Null Detection</legend>
+                  <label className='input-group d-flex justify-content-between'>
+                    <Typography>'Not Null' % Tolerance</Typography>
+                    <input type='range' name='nullableRowsThreshold' defaultValue={0.02} min={0.0} max={0.10} step={0.005} title='Between 0.0-0.10, Default: 0.02' ref={register({ min: 0.0, max: 0.10 })} />
+                    <span>{displayNullableRowsThreshold}%</span>
+                  </label>
+                </fieldset>
 
-              <fieldset className='form-group'>
-                <legend className='mb-1'>Null Detection</legend>
-                <label className='input-group d-flex justify-content-between'>
-                  <Typography>'Not Null' % Tolerance</Typography>
-                  <input type='range' name='nullableRowsThreshold' defaultValue={0.02} min={0.0} max={0.10} step={0.005} title='Between 0.0-0.10, Default: 0.02' ref={register({ min: 0.0, max: 0.10 })} />
-                  <span>{displayNullableRowsThreshold}%</span>
-                </label>
-              </fieldset>
+                <fieldset className='form-group'>
+                  <legend className='mb-1'>Uniqueness Detection</legend>
+                  <label className='input-group d-flex justify-content-between'>
+                    <Typography>% Not Unique Threshold</Typography>
+                    <input type='range' name='uniqueRowsThreshold' defaultValue={1.0} min={0.80} max={1.0} step={0.005} ref={register({ min: 0.80, max: 1.0 })} />
+                    <span>{displayUniqueRowsThreshold}%</span>
+                  </label>
+                </fieldset>
 
-              <fieldset className='form-group'>
-                <legend className='mb-1'>Uniqueness Detection</legend>
-                <label className='input-group d-flex justify-content-between'>
-                  <Typography>% Not Unique Threshold</Typography>
-                  <input type='range' name='uniqueRowsThreshold' defaultValue={1.0} min={0.80} max={1.0} step={0.005} ref={register({ min: 0.80, max: 1.0 })} />
-                  <span>{displayUniqueRowsThreshold}%</span>
-                </label>
-              </fieldset>
-
-              {/* <div className="input-group mb-3">
+                {/* <div className="input-group mb-3">
                 <div className="input-group-prepend">
                   <span className="input-group-text">$</span>
                 </div>
@@ -206,17 +212,18 @@ export default function AdvancedOptionsForm ({
                   <span className="input-group-text">.00</span>
                 </div>
               </div> */}
-            </CardContent>
-            <CardActions disableSpacing className='d-flex justify-content-around'>
-              <ButtonGroup size='small'>
-                <IconButton type='button' color='secondary' onClick={handleExpandClick} title='Close'><CloseIcon /></IconButton>
-                {/* <IconButton type='reset' color='default' onClick={reset} title="Reset"><RefreshIcon /></IconButton> */}
-              </ButtonGroup>
-              <Button variant='contained' type='submit' color='primary' startIcon={<SaveIcon />}>Save</Button>
-            </CardActions>
-          </Paper>
-        </form>
-      </Collapse>
-    </Card>
+              </CardContent>
+              <CardActions disableSpacing className='d-flex justify-content-around'>
+                <ButtonGroup size='small'>
+                  <IconButton type='button' color='secondary' onClick={handleExpandClick} title='Close'><CloseIcon /></IconButton>
+                  {/* <IconButton type='reset' color='default' onClick={reset} title="Reset"><RefreshIcon /></IconButton> */}
+                </ButtonGroup>
+                <Button variant='contained' type='submit' color='primary' startIcon={<SaveIcon />}>Save</Button>
+              </CardActions>
+            </Paper>
+          </form>
+        </Collapse>
+      </Card>
+    </>
   )
 }

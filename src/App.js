@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import './styles.scss'
 // import Header from './components/Header'
 // import NavBar from './components/NavBar'
-import GeneratorForm from './components/GeneratorForm'
-import SchemaExplorer from './components/SchemaExplorer'
-import AdvancedOptionsForm from './components/AdvancedOptionsForm'
+// import GeneratorForm from './components/GeneratorForm'
+// import SchemaExplorer from './components/SchemaExplorer'
+// import AdvancedOptionsForm from './components/AdvancedOptionsForm'
+import SchemaTools from './components/SchemaTools'
 // import PopoverWrapper from './components/PopoverWrapper'
 
 export default function App () {
@@ -19,9 +20,10 @@ export default function App () {
   const [schema, setSchema] = useState('')
   return (
     <div className='App container'>
+      <SchemaTools />
       {/* <NavBar /> */}
       {/* <Header /> */}
-      <AdvancedOptionsForm
+      {/* <AdvancedOptionsForm
         onSave={options => {
           setOptions(options)
         }}
@@ -29,7 +31,7 @@ export default function App () {
         className='options-ui'
       />
       <GeneratorForm className='generator-form' options={options} onSchema={(schema, title) => setSchema(schema)} />
-      <SchemaExplorer schemaResults={schema} />
+      <SchemaExplorer schemaResults={schema} /> */}
     </div>
   )
 }

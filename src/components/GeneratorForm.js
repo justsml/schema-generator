@@ -3,6 +3,7 @@ import { schemaBuilder } from 'schema-analyzer'
 import { parse } from '../adapters/readers.js'
 import { render } from '../adapters/writers.js'
 import CodeViewer from './CodeViewer'
+import { PostgresIcon, MongoDbIcon } from './SchemaTools/AppIcons.js'
 
 export default function GeneratorForm ({ options = {}, onSchema }) {
   const [schemaName, setSchemaName] = useState('User')

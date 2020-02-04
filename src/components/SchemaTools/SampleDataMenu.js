@@ -26,6 +26,7 @@ export default function SampleDataMenu ({ options = [], onSelect = (value, index
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index)
     setOpen(false)
+    handleClick()
   }
 
   const handleToggle = () => {
@@ -76,7 +77,6 @@ export default function SampleDataMenu ({ options = [], onSelect = (value, index
                   {options.map((option, index) => (
                     <MenuItem
                       key={option}
-                      disabled={index === 2}
                       selected={index === selectedIndex}
                       onClick={event => handleMenuItemClick(event, index)}
                     >
