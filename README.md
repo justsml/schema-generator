@@ -21,6 +21,10 @@ The components included here support **JSON/CSV data!**
 - [ ] Validation Code for Libraries like `Yup` or `Joi`
 - [ ] JSON Schemas (for libraries like `ajv`)
 - [ ] Outputs for other languages/tools!
+- [ ] Binary Encoders (protobufs, thrift, avro?)
+- [ ] JPA
+- [ ] Models/Ruby
+- [ ] 
 
 ### Features
 
