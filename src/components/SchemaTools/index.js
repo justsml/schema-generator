@@ -63,8 +63,8 @@ export default function SchemaTools ({}) {
     }
     setStatusMessage(`One moment...\nImporting ${name} dataset...`)
     return fetch(filePath)
-    .then(response => response.text())
-    .then(data => {
+      .then(response => response.text())
+      .then(data => {
         setSchemaName(name)
         setInputData(data)
         setStatusMessage('Loaded Sample Dataset 🎉')
