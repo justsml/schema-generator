@@ -3,7 +3,6 @@ import debug from 'debug'
 const log = debug('writer:knex')
 
 const BIG_INTEGER_MIN = 2147483647
-const ENUM_DETECTION_ROW_MINIMUM = 100
 
 const getFieldLengthArg = (fieldName, maxLength) => {
   if (maxLength > 4000) return 8000
@@ -91,7 +90,7 @@ export default {
 
         let appendChain = ''
 
-        let sizePart = topType === 'string'
+        let sizePart = topType === 'string' && length
           ? `, ${getFieldLengthArg(name, correctForErroneousMaximum(bogusSizeThreshold, length.p99, length.max))}`
           : ''
 
@@ -143,7 +142,7 @@ export default {
 
         return `    table.text("${name}")${appendChain}; // ` + JSON.stringify(topTypeStats)
       })
-    //   const schemaName = snakecase(schemaName)
+    schemaName = snakecase(schemaName)
     return `// More info: http://knexjs.org/#Schema-createTable
 
     exports.up = function up(knex) {

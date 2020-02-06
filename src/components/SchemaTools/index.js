@@ -61,6 +61,7 @@ export default function SchemaTools ({}) {
       setInputData('')
       return
     }
+    setInputData('')
     setStatusMessage(`One moment...\nImporting ${name} dataset...`)
     return fetch(filePath)
       .then(response => response.text())
