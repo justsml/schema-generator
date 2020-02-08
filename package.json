@@ -5,7 +5,7 @@
   "keywords": [],
   "main": "src/index.js",
   "type": "module",
-  "homepage": "https://generator.danapi.dev/",
+  "homepage": "http://generator.danapi.dev/",
   "standard": {
     "ignore": [
       "node_modules/**"
