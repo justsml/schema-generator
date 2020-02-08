@@ -1,10 +1,11 @@
 {
   "name": "schema-generator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "keywords": [],
   "main": "src/index.js",
   "type": "module",
+  "homepage": "https://generator.danapi.dev/",
   "standard": {
     "ignore": [
       "node_modules/**"
@@ -30,28 +31,29 @@
     "lodash.isdate": "4.0.1",
     "lodash.isnumber": "3.0.3",
     "lodash.snakecase": "4.1.1",
+    "node-sass": "^4.13.1",
     "react": "16.12.0",
     "react-apexcharts": "^1.3.6",
     "react-chartjs-2": "^2.9.0",
     "react-dom": "16.12.0",
     "react-hook-form": "^4.8.1",
-    "node-sass": "^4.13.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.1",
     "react-syntax-highlighter": "12.2.1",
     "schema-analyzer": "^1.2.1",
+    "serve": "^11.3.0",
     "typescript": "^3.7.5"
   },
   "devDependencies": {
     "@types/jest": "24.9.0",
     "eslint-plugin-html": "^6.0.0",
-    "husky": "^4.2.1",
     "jest": "24.9.0",
     "standard": "^14.3.1"
   },
   "scripts": {
     "lint": "standard --fix 'src/**/*.js'",
-    "start": "react-scripts start",
+    "start": "npm run build && serve -s build",
+    "start:dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom  --coverage",
     "eject": "react-scripts eject"
