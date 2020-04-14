@@ -116,7 +116,7 @@ form .field-name {
 // }
 
 .field-overlay {
-  transition: opacity 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition: opacity 0.215s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 .appears-valid {
   .success-message {
@@ -130,5 +130,8 @@ form .field-name {
   .help-message {
     pointer-events: none;
     opacity: 1;
+    & :hover {
+      opacity: 0.45
+    }
   }
 }

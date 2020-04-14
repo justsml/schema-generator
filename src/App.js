@@ -10,6 +10,7 @@ import SchemaTools from './components/SchemaTools'
 
 export default function App () {
   const [options, setOptions] = useState({
+    adapter: 'knex',
     strictMatching: true,
     enumMinimumRowCount: 100,
     enumAbsoluteLimit: 10,

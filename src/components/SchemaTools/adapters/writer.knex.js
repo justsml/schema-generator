@@ -69,20 +69,28 @@ export default {
     options,
     schemaName
   }) {
-    const { bogusSizeThreshold = 0.10 } = options || {}
+    const { bogusSizeThreshold = 0.10, defaultColumnFormatter = (name, fieldInfo) => `    table.string("${name}", 420); // fallback for missing columns` } = options || {}
 
     const fieldSummary = results.fields
     // const uniqueCounts = results.uniques
     // const rowCount = results.rowCount
 
     const fieldPairs = Object.entries(fieldSummary)
-      .map(([fieldName, fieldInfo]) => {
+      .map((fieldNameAndInfo) => {
+        
+        const [fieldName, fieldInfo] = fieldNameAndInfo
         const name = snakecase(fieldName)
+        if (fieldInfo && fieldInfo.types && Object.keys(fieldInfo.types).length === 0) {
+          return defaultColumnFormatter(fieldName, fieldInfo)
+        }
         let { types } = fieldInfo
         types = Array.isArray(types) ? types : Object.entries(types)
         types = types.slice(0)
           .filter(f => f[0] !== 'Null' && f[0] !== 'Unknown')
           .sort((a, b) => a[1].count > b[1].count ? -1 : a[1].count === b[1].count ? 0 : 1)
+
+        if (types.length === 0) return defaultColumnFormatter(fieldName, fieldInfo)
+        
         let [topType, topTypeStats] = types[0]
         topType = topType.toLowerCase()
         const { length, scale, precision, value, unique, nullable, enum: enumData, count: typeCount } = topTypeStats
