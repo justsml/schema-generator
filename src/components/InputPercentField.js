@@ -1,8 +1,8 @@
-import React from 'react';
-import NumberFormat from 'react-number-format';
+import React from 'react'
+import NumberFormat from 'react-number-format'
 
-export default function InputPercentField(props) {
-  const { inputRef, onChange, inputProps = {}, ...other } = props;
+export default function InputPercentField (props) {
+  const { inputRef, onChange, inputProps = {}, ...other } = props
 
   return (
     <NumberFormat
@@ -13,14 +13,14 @@ export default function InputPercentField(props) {
         onChange({
           target: {
             name: props.name,
-            value: values.value,
-          },
-        });
+            value: values.value
+          }
+        })
       }}
       thousandSeparator
       isNumericString
-      fixedDecimalScale={true}
-      suffix="%"
+      fixedDecimalScale
+      suffix='%'
     />
-  );
+  )
 }

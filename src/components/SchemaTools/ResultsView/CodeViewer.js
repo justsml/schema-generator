@@ -14,14 +14,14 @@ export default function CodeGenerator ({
   children
 }) {
   const [generatedCode, setGeneratedCode] = React.useState('')
-  
+
   const history = useHistory()
 
   if (!schemaResults) {
     console.warn('Request denied, reloads not supported.')
     history.push('/')
   }
-  
+
   schemaName = options.schemaName || schemaName
 
   React.useEffect(() => {

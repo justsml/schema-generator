@@ -77,7 +77,6 @@ export default {
 
     const fieldPairs = Object.entries(fieldSummary)
       .map((fieldNameAndInfo) => {
-        
         const [fieldName, fieldInfo] = fieldNameAndInfo
         const name = snakecase(fieldName)
         if (fieldInfo && fieldInfo.types && Object.keys(fieldInfo.types).length === 0) {
@@ -90,7 +89,7 @@ export default {
           .sort((a, b) => a[1].count > b[1].count ? -1 : a[1].count === b[1].count ? 0 : 1)
 
         if (types.length === 0) return defaultColumnFormatter(fieldName, fieldInfo)
-        
+
         let [topType, topTypeStats] = types[0]
         topType = topType.toLowerCase()
         const { length, scale, precision, value, unique, nullable, enum: enumData, count: typeCount } = topTypeStats

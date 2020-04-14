@@ -9,16 +9,16 @@ import SchemaTools from './components/SchemaTools'
 // import PopoverWrapper from './components/PopoverWrapper'
 
 export default function App () {
-  const [options, setOptions] = useState({
-    adapter: 'knex',
-    strictMatching: true,
-    enumMinimumRowCount: 100,
-    enumAbsoluteLimit: 10,
-    enumPercentThreshold: 0.01,
-    nullableRowsThreshold: 0.02,
-    uniqueRowsThreshold: 1.0
-  })
-  const [schema, setSchema] = useState('')
+  // const [options, setOptions] = useState({
+  //   adapter: 'knex',
+  //   strictMatching: true,
+  //   enumMinimumRowCount: 100,
+  //   enumAbsoluteLimit: 10,
+  //   enumPercentThreshold: 0.01,
+  //   nullableRowsThreshold: 0.02,
+  //   uniqueRowsThreshold: 1.0
+  // })
+  // const [schema, setSchema] = useState('')
   return (
     <div className='App container'>
       <SchemaTools />
