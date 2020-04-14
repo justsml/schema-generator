@@ -15,6 +15,7 @@ import Link from "@material-ui/core/Link";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import SchemaExplorer from "./ResultsView/SchemaExplorer.js";
 
+import StorageIcon from '@material-ui/icons/Storage'
 import ChooseInput from "./ChooseInput";
 import AdvancedOptionsForm from "./AdvancedOptionsForm";
 import InputProcessor from "./InputProcessor.js";
@@ -198,17 +199,20 @@ export default function SchemaTools({}) {
     flexDirection: "column",
     justifyContent: "stretch",
     alignContent: "stretch",
-    height: "calc(100vh - 7rem)",
+    height: "calc(100vh - 2.75rem)",
   };
   return (
     <main
-      className="shadow-lg p-3 m-5 bg-white rounded"
+      className="shadow-lg p-2 m-3 bg-white rounded"
       style={mainStyle}
       onClick={smartOptionsMenuHandler}
     >
       <Router>
         <nav className="row w-100 ">
-          <h1 className="col-11">Dan's Schema Generator</h1>
+          <h1 className="col-11">
+            <StorageIcon className="m-2 mb-3" style={{fontSize: "2.125rem"}} color="primary" />
+            <a href="https://danlevy.net/" target="_blank">Dan's</a> Schema Generator
+          </h1>
           <aside className="col-1 text-right" onClick={stopPropagation}>
             <AdvancedOptionsForm
               options={options}
@@ -243,7 +247,7 @@ export default function SchemaTools({}) {
 
         <Switch>
           <Route exact path="/">
-            <h4 className="my-3">Choose an Option Below</h4>
+            <h2 className="my-2 text-center">Choose an Option:</h2>
             <ChooseInput
               onSelect={loadData}
               reset={() => {

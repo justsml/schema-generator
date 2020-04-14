@@ -24,6 +24,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
+import InputPercentField from "../InputPercentField";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,8 +34,8 @@ const useStyles = makeStyles((theme) => ({
     width: "42px",
     minWidth: "0",
     maxWidth: "42px",
-    marginRight: "-30px",
-    marginTop: "-10px",
+    marginRight: "-30px"
+    // marginTop: "-10px",
   },
   // header: {
   //   padding: '0.5rem',
@@ -205,9 +207,7 @@ export default function AdvancedOptionsForm({
                     />
                   </section>
                   <section className="input-group d-flex justify-content-between">
-                    <InputLabel htmlFor="adapter">
-                      <Typography>Output Adapter</Typography>
-                    </InputLabel>
+                    <Typography>Output Adapter</Typography>
                     <Select
                       native
                       defaultValue={options.adapter}
@@ -227,66 +227,90 @@ export default function AdvancedOptionsForm({
                 <fieldset className="form-group">
                   <legend className="mb-1">Enumerations</legend>
 
-                  <label className="input-group d-flex justify-content-between">
-                    <Typography>Min. Rows for Enumerations</Typography>
-                    <input
-                      type="number"
+                  <label className="input-group d-flex flex-row flex-nowrap align-items-center justify-content-around text-left">
+                    <Typography className="flex-grow-1 w-80">Min. Rows for Enumerations</Typography>
+                    <Input
                       name="enumMinimumRowCount"
-                      defaultValue={100}
+                      defaultValue={options.enumMinimumRowCount}
+                      inputComponent={InputPercentField}
+                      inputProps={{
+                        name: "enumMinimumRowCount",
+                        id: "enumMinimumRowCount",
+                        decimalScale: 0
+                      }}
                       min={0}
-                      max={10000}
+                      max={1000}
                       step={10}
-                      title="Between 0-10000, Default: 100"
-                      ref={register({ min: 0, max: 10000 })}
+                      title="Between 0-1000, Default=10"
+                      inputRef={register({ min: 0, max: 1000 })}
+                      onChange={({target}) => methods.setValue('enumMinimumRowCount', target.value, true)}
                     />
                   </label>
-                  <label className="input-group d-flex justify-content-between">
-                    <Typography>Enumeration Item Limit</Typography>
-                    <input
-                      type="number"
+                  <label className="input-group d-flex flex-row flex-nowrap align-items-center justify-content-around text-left">
+                    <Typography className="flex-grow-1 w-80">Enumeration Item Limit</Typography>
+                    <Input
                       name="enumAbsoluteLimit"
-                      defaultValue={10}
+                      defaultValue={options.enumAbsoluteLimit}
+                      inputComponent={InputPercentField}
+                      inputProps={{
+                        name: "enumAbsoluteLimit",
+                        id: "enumAbsoluteLimit",
+                        decimalScale: 0
+                      }}
                       min={0}
                       max={100}
                       step={1}
                       title="Between 0-100, Default=10"
-                      ref={register({ min: 0, max: 100 })}
+                      inputRef={register({ min: 0, max: 100 })}
+                      onChange={({target}) => methods.setValue('enumAbsoluteLimit', target.value, true)}
                     />
                   </label>
                 </fieldset>
 
                 <fieldset className="form-group">
                   <legend className="mb-1">Null Detection</legend>
-                  <label className="input-group d-flex justify-content-between">
-                    <Typography>'Not Null' % Tolerance</Typography>
-                    <input
-                      type="range"
+                  <label className="input-group d-flex flex-row flex-nowrap align-items-center justify-content-around text-left">
+                    <Typography className="flex-grow-1 w-80">Nullable if % of Null Rows Exceeds</Typography>
+                    <Input
                       name="nullableRowsThreshold"
-                      defaultValue={0.02}
+                      defaultValue={options.nullableRowsThreshold}
+                      inputComponent={InputPercentField}
+                      inputProps={{
+                        name: "nullableRowsThreshold",
+                        id: "nullableRowsThreshold",
+                        decimalScale: 3
+                      }}
                       min={0.0}
                       max={0.1}
-                      step={0.005}
+                      step={0.0025}
                       title="Between 0.0-0.10, Default: 0.02"
-                      ref={register({ min: 0.0, max: 0.1 })}
+                      inputRef={register({ min: 0.0, max: 0.1 })}
+                      onChange={({target}) => methods.setValue('nullableRowsThreshold', target.value, true)}
                     />
-                    <span>{displayNullableRowsThreshold}%</span>
                   </label>
                 </fieldset>
 
                 <fieldset className="form-group">
                   <legend className="mb-1">Uniqueness Detection</legend>
-                  <label className="input-group d-flex justify-content-between">
-                    <Typography>% Not Unique Threshold</Typography>
-                    <input
-                      type="range"
+                  <label className="input-group d-flex flex-row flex-nowrap align-items-center justify-content-around text-left">
+                    <Typography className="flex-grow-1 w-80">Min. Unique % Threshold</Typography>
+                    <Input
                       name="uniqueRowsThreshold"
-                      defaultValue={1.0}
+                      className="flex-grow-0"
+                      defaultValue={options.uniqueRowsThreshold}
+                      inputComponent={InputPercentField}
+                      inputProps={{
+                        name: "uniqueRowsThreshold",
+                        id: "uniqueRowsThreshold",
+                        decimalScale: 3
+                      }}
                       min={0.8}
                       max={1.0}
-                      step={0.005}
-                      ref={register({ min: 0.8, max: 1.0 })}
+                      step={0.0025}
+                      inputRef={register({ min: 0.8, max: 1.0 })}
+                      title="Between 0-100, Default=10"
+                      onChange={({target}) => methods.setValue('uniqueRowsThreshold', target.value, true)}
                     />
-                    <span>{displayUniqueRowsThreshold}%</span>
                   </label>
                 </fieldset>
 

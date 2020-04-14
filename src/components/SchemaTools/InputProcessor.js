@@ -70,7 +70,10 @@ export default function InputProcessor ({
         placeholder='Paste your data here, or click "Start Here" to choose a Sample Data Set'
         value={inputData}
         onChange={e => setInputData(e.target.value)}
-        // onPaste={() => history.push('/results/code/')}
+        onPaste={(e) => {
+          setInputData(e.target.value);
+          setTimeout(() => history.push('/results/code/'), 2000)
+        }}
         {...textareaOpts}
       />
       {/* <textarea
