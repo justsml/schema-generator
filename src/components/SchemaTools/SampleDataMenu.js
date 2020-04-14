@@ -50,7 +50,7 @@ export default function SampleDataMenu ({ options = [], onSelect = (value, index
   return (
     <>
       <ButtonGroup variant='contained' color='primary' ref={anchorRef} aria-label='split button' className={className}>
-        <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+        <Button onClick={handleToggle}>Choose Sample Dataset</Button>
         <Button
           color='primary'
           size='small'

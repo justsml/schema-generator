@@ -23,16 +23,16 @@ export default function ChooseInput ({ text = '', onSelect, reset, children }) {
   }
 
   return (
-    <section className='main-panel w-100 h-100 p-3 my-3 d-flex justify-content-around align-items-start'>
+    <section className='main-panel w-100 h-100 p-3 my-2 d-flex justify-content-around align-items-start text-center'>
       <section className='panel mb-3'>
-        <Typography variant='h6' className='mb-3'>Option #1: Your Data</Typography>
+        <Typography variant='h6' className='mb-3'>Option #1: Copy &amp; Paste Data</Typography>
         <ButtonGroup orientation='vertical' variant='contained' className='main-options text-left'>
           <Button onClick={wrapReset}>Paste from Clipboard</Button>
-          <Button>From File (processed locally)</Button>
+          {/* <Button>From File (processed locally)</Button> */}
         </ButtonGroup>
       </section>
       <section className='panel mb-3'>
-        <Typography variant='h6' className='mb-3'>Option #2: Playground &amp; Sample Data</Typography>
+        <Typography variant='h6' className='mb-3'>Option #2: Sample Datasets</Typography>
         <SampleDataMenu
           onSelect={wrapSelect}
           options={[

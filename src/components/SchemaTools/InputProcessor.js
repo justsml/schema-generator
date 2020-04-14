@@ -60,9 +60,9 @@ export default function InputProcessor ({
   if (hasInputData) {
     className += ' appears-valid'
   }
-  return <Paper elevation={3} className={className}>
+  return <Paper elevation={3} className={className} style={{ flexGrow: 2 }}>
     <section className='position-relative w-100 h-100 d-flex flex-column align-items-center justify-content-center '>
-      {displayStatus(() => history.push('/results/code/knex'))}
+      {displayStatus(() => history.push('/results/code/'))}
 
       <TextareaAutosize
         className='w-100 h-100 border-0 m-1 p-1'
@@ -70,6 +70,10 @@ export default function InputProcessor ({
         placeholder='Paste your data here, or click "Start Here" to choose a Sample Data Set'
         value={inputData}
         onChange={e => setInputData(e.target.value)}
+        onPaste={(e) => {
+          setInputData(e.target.value)
+          setTimeout(() => history.push('/results/code/'), 2000)
+        }}
         {...textareaOpts}
       />
       {/* <textarea

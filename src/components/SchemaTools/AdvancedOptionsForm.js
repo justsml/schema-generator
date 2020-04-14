@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm, Controller } from 'react-hook-form'
 // import PropTypes from 'prop-types';
 import { withStyles, makeStyles } from '@material-ui/core/styles'
@@ -20,15 +20,22 @@ import CloseIcon from '@material-ui/icons/Close'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import SettingsIcon from '@material-ui/icons/Settings'
 
-const useStyles = makeStyles(theme => ({
+import InputLabel from '@material-ui/core/InputLabel'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import Input from '@material-ui/core/Input'
+import InputPercentField from '../InputPercentField'
+
+const useStyles = makeStyles((theme) => ({
   root: {
     transform: 'scale(1.25)',
     margin: '0',
     width: '42px',
     minWidth: '0',
     maxWidth: '42px',
-    marginRight: '-30px',
-    marginTop: '-10px'
+    marginRight: '-30px'
+    // marginTop: "-10px",
   },
   // header: {
   //   padding: '0.5rem',
@@ -54,20 +61,20 @@ const useStyles = makeStyles(theme => ({
       width: 110
     }
   },
-  parentPanel: {
-
-  },
+  parentPanel: {},
   panel: {
-    position: 'absolute'
+    position: 'absolute',
+    zIndex: 10
   },
   panelContent: {
     position: 'relative',
     margin: '0 0 2.5rem 0',
     top: '0.45rem',
-    background: 'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(245,245,245,0.98) 25%, rgba(245,245,245,0.98) 75%, rgba(255,255,255,1) 100%)', /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background:
+      'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(245,245,245,0.98) 25%, rgba(245,245,245,0.98) 75%, rgba(255,255,255,1) 100%)' /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */,
     // background: 'rgba(245, 245, 245, 0.985)',
-    height: '100%',
-    maxHeight: '80vh',
+    height: 'auto',
+    maxHeight: 'calc(100vh - 7rem)',
     overflowY: 'auto',
     minWidth: '400px'
   }
@@ -100,11 +107,18 @@ const useStyles = makeStyles(theme => ({
 //     {...args}
 //   />
 // </WrapWithLabel>))
-const percentFormatter = new Intl.NumberFormat({ style: 'percent', minimumFractionDigits: 2 })
-const formatPercent = number => number != null && Number(percentFormatter.format(number)).toFixed(2)
+const percentFormatter = new Intl.NumberFormat({
+  style: 'percent',
+  minimumFractionDigits: 2
+})
+const formatPercent = (number) =>
+  number != null && Number(percentFormatter.format(number)).toFixed(2)
 
 export default function AdvancedOptionsForm ({
+  expanded,
+  setExpanded,
   options = {
+    adapter: 'knex',
     strictMatching: true,
     enumMinimumRowCount: 100,
     enumAbsoluteLimit: 10,
@@ -112,13 +126,15 @@ export default function AdvancedOptionsForm ({
     nullableRowsThreshold: 0.02,
     uniqueRowsThreshold: 1.0
   },
-  className,
-  onSave = (opts) => console.log('TODO: Add onSave handler to options form', opts)
+  className = '',
+  onSave = (opts) =>
+    console.log('TODO: Add onSave handler to options form', opts)
 }) {
   const classes = useStyles()
   const methods = useForm({ defaultValues: options })
+  const $formRef = React.useRef()
   const { handleSubmit, control, reset, register, watch } = methods
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     const updatedOptions = {
       ...data,
       nullableRowsThreshold: data.nullableRowsThreshold / 100.0,
@@ -127,35 +143,49 @@ export default function AdvancedOptionsForm ({
     console.log('Saved Options', updatedOptions)
 
     if (onSave) onSave(updatedOptions)
-    setExpanded(false)
+    // setExpanded(false);
   }
-
-  const [expanded, setExpanded] = React.useState(false)
 
   const handleExpandClick = (e) => {
     if (e && e.preventDefault) e.preventDefault()
     setExpanded(!expanded)
   }
 
-  const displayNullableRowsThreshold = formatPercent(100.0 * watch('nullableRowsThreshold'))
-  const displayUniqueRowsThreshold = 100 - formatPercent(100.0 * watch('uniqueRowsThreshold'))
+  const displayNullableRowsThreshold = formatPercent(
+    100.0 * watch('nullableRowsThreshold')
+  )
+  const displayUniqueRowsThreshold =
+    100 - formatPercent(100.0 * watch('uniqueRowsThreshold'))
+
+  const autoSaveForm = event => {
+    console.info('AutoSave.onChange', options)
+    handleSubmit(onSubmit)(event)
+    // if ($formRef.current && $formRef.current.submit) $formRef.current.submit();
+  }
 
   return (
     <>
       <Button
+        id='btn-toggle-settings'
         className={classes.root + ' py-2'}
         aria-label='open settings panel'
         onClick={handleExpandClick}
         disableRipple
         title='Advanced Options'
       >
-        {expanded
-          ? <CloseIcon aria-label='Close' />
-          : <SettingsIcon aria-label='Open Advanced Options' />}
+        {expanded ? (
+          <CloseIcon aria-label='Close' />
+        ) : (
+          <SettingsIcon aria-label='Open Advanced Options' />
+        )}
       </Button>
       <Card raised={false} style={{ marginLeft: '-300px' }}>
         <Collapse in={expanded} className={classes.panel} timeout='auto'>
-          <form className={'schema-options ' + className + ' ' + classes.form} onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className={'schema-options ' + className + ' ' + classes.form}
+            onSubmit={handleSubmit(onSubmit)}
+            onChange={autoSaveForm}
+          >
             <Paper elevation={3} className={classes.panelContent}>
               <CardContent className='pb-1 px-3 pt-2'>
                 <fieldset className='form-group'>
@@ -163,43 +193,123 @@ export default function AdvancedOptionsForm ({
                   <section className='input-group d-flex justify-content-between'>
                     <Typography>Strict Matching</Typography>
                     <Controller
-                      as={<Checkbox name='strictMatching' style={{ padding: '0' }} />}
+                      as={
+                        <Checkbox
+                          name='strictMatching'
+                          style={{ padding: '0' }}
+                        />
+                      }
                       name='strictMatching'
                       value='strict'
                       defaultValue={options.strictMatching}
                       control={control}
                     />
                   </section>
+                  <section className='input-group d-flex justify-content-between'>
+                    <Typography>Output Adapter</Typography>
+                    <Select
+                      native
+                      defaultValue={options.adapter}
+                      inputProps={{
+                        name: 'adapter',
+                        id: 'adapter'
+                      }}
+                      inputRef={register()}
+                    >
+                      <option value='knex'>Knex</option>
+                      <option value='mongoose'>Mongoose</option>
+                      <option value='typescript'>TypeScript Type</option>
+                    </Select>
+                  </section>
                 </fieldset>
 
                 <fieldset className='form-group'>
                   <legend className='mb-1'>Enumerations</legend>
 
-                  <label className='input-group d-flex justify-content-between'>
-                    <Typography>Min. Rows for Enumerations</Typography>
-                    <input type='number' name='enumMinimumRowCount' defaultValue={100} min={0} max={10000} step={10} title='Between 0-10000, Default: 100' ref={register({ min: 0, max: 10000 })} />
+                  <label className='input-group d-flex flex-row flex-nowrap align-items-center justify-content-around text-left'>
+                    <Typography className='flex-grow-1 w-80'>Min. Rows for Enumerations</Typography>
+                    <Input
+                      name='enumMinimumRowCount'
+                      defaultValue={options.enumMinimumRowCount}
+                      inputComponent={InputPercentField}
+                      inputProps={{
+                        name: 'enumMinimumRowCount',
+                        id: 'enumMinimumRowCount',
+                        decimalScale: 0
+                      }}
+                      min={0}
+                      max={1000}
+                      step={10}
+                      title='Between 0-1000, Default=10'
+                      inputRef={register({ min: 0, max: 1000 })}
+                      onChange={({ target }) => methods.setValue('enumMinimumRowCount', target.value, true)}
+                    />
                   </label>
-                  <label className='input-group d-flex justify-content-between'>
-                    <Typography>Enumeration Item Limit</Typography>
-                    <input type='number' name='enumAbsoluteLimit' defaultValue={10} min={0} max={100} step={1} title='Between 0-100, Default=10' ref={register({ min: 0, max: 100 })} />
+                  <label className='input-group d-flex flex-row flex-nowrap align-items-center justify-content-around text-left'>
+                    <Typography className='flex-grow-1 w-80'>Enumeration Item Limit</Typography>
+                    <Input
+                      name='enumAbsoluteLimit'
+                      defaultValue={options.enumAbsoluteLimit}
+                      inputComponent={InputPercentField}
+                      inputProps={{
+                        name: 'enumAbsoluteLimit',
+                        id: 'enumAbsoluteLimit',
+                        decimalScale: 0
+                      }}
+                      min={0}
+                      max={100}
+                      step={1}
+                      title='Between 0-100, Default=10'
+                      inputRef={register({ min: 0, max: 100 })}
+                      onChange={({ target }) => methods.setValue('enumAbsoluteLimit', target.value, true)}
+                    />
                   </label>
                 </fieldset>
 
                 <fieldset className='form-group'>
                   <legend className='mb-1'>Null Detection</legend>
-                  <label className='input-group d-flex justify-content-between'>
-                    <Typography>'Not Null' % Tolerance</Typography>
-                    <input type='range' name='nullableRowsThreshold' defaultValue={0.02} min={0.0} max={0.10} step={0.005} title='Between 0.0-0.10, Default: 0.02' ref={register({ min: 0.0, max: 0.10 })} />
-                    <span>{displayNullableRowsThreshold}%</span>
+                  <label className='input-group d-flex flex-row flex-nowrap align-items-center justify-content-around text-left'>
+                    <Typography className='flex-grow-1 w-80'>Nullable if % of Null Rows Exceeds</Typography>
+                    <Input
+                      name='nullableRowsThreshold'
+                      defaultValue={options.nullableRowsThreshold}
+                      inputComponent={InputPercentField}
+                      inputProps={{
+                        name: 'nullableRowsThreshold',
+                        id: 'nullableRowsThreshold',
+                        decimalScale: 3
+                      }}
+                      min={0.0}
+                      max={0.1}
+                      step={0.0025}
+                      title='Between 0.0-0.10, Default: 0.02'
+                      inputRef={register({ min: 0.0, max: 0.1 })}
+                      onChange={({ target }) => methods.setValue('nullableRowsThreshold', target.value, true)}
+                    />
                   </label>
                 </fieldset>
 
                 <fieldset className='form-group'>
                   <legend className='mb-1'>Uniqueness Detection</legend>
-                  <label className='input-group d-flex justify-content-between'>
-                    <Typography>% Not Unique Threshold</Typography>
-                    <input type='range' name='uniqueRowsThreshold' defaultValue={1.0} min={0.80} max={1.0} step={0.005} ref={register({ min: 0.80, max: 1.0 })} />
-                    <span>{displayUniqueRowsThreshold}%</span>
+                  <label className='input-group d-flex flex-row flex-nowrap align-items-center justify-content-around text-left'>
+                    <Typography className='flex-grow-1 w-80'>Min. Unique % Threshold</Typography>
+                    <Input
+                      name='uniqueRowsThreshold'
+                      className='flex-grow-0'
+                      defaultValue={options.uniqueRowsThreshold}
+                      inputComponent={InputPercentField}
+                      inputProps={{
+                        name: 'uniqueRowsThreshold',
+                        id: 'uniqueRowsThreshold',
+                        decimalScale: 3
+                      }}
+                      min={0.8}
+                      max={1.0}
+                      step={0.0025}
+                      inputRef={register({ min: 0.8, max: 1.0 })}
+                      title='Between 0-100, Default=10'
+                      onChange={({ target }) => methods.setValue('uniqueRowsThreshold', target.value, true)}
+                    />
                   </label>
                 </fieldset>
 
@@ -213,12 +323,19 @@ export default function AdvancedOptionsForm ({
                 </div>
               </div> */}
               </CardContent>
-              <CardActions disableSpacing className='d-flex justify-content-around'>
-                <ButtonGroup size='small'>
-                  <IconButton type='button' color='secondary' onClick={handleExpandClick} title='Close'><CloseIcon /></IconButton>
-                  {/* <IconButton type='reset' color='default' onClick={reset} title="Reset"><RefreshIcon /></IconButton> */}
-                </ButtonGroup>
-                <Button variant='contained' type='submit' color='primary' startIcon={<SaveIcon />}>Save</Button>
+              <CardActions
+                disableSpacing
+                className='d-flex justify-content-around'
+              >
+                <Button
+                  variant='contained'
+                  type='submit'
+                  color='primary'
+                  size='small'
+                  startIcon={<SaveIcon />}
+                >
+                  Save
+                </Button>
               </CardActions>
             </Paper>
           </form>
