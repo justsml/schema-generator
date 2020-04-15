@@ -1,4 +1,4 @@
-# Schema Generator
+# [Schema Generator](https://DataStep.io/)
 
 ## Generate magical auto-typed code & database interfaces!
 
@@ -12,23 +12,9 @@ The components included here support **JSON/CSV data!**
 
 ![./demo_80.gif](./demo_80.gif "using built-in sample analysis")
 
-### Currently Supports...
-
-- [x] Mongoose Schema definition - https://mongoosejs.com/
-- [x] Knex Migration scripts - https://knexjs.org
-- [ ] SQL DDL script (Data-definition language) - **Coming soon**
-- [ ] TypeScript Types
-- [ ] Validation Code for Libraries like `Yup` or `Joi`
-- [ ] JSON Schemas (for libraries like `ajv`)
-- [ ] Outputs for other languages/tools!
-- [ ] Binary Encoders (protobufs, thrift, avro?)
-- [ ] JPA
-- [ ] Models/Ruby
-- [ ] 
-
 ### Features
 
-The primary goal is to support any input JSON/CSV and infer as much as possible. More data will generally yield better results.
+#### The primary goal is to support any input JSON/CSV and infer as much as possible. More data will generally yield better results.
 
 - [x] Support SQL & noSQL systems!
 - [x] Automatic type detection!
@@ -42,3 +28,14 @@ The primary goal is to support any input JSON/CSV and infer as much as possible.
 - [x] Extensible design, add new output/target with ease!
 - [ ] Nested data structure & multi-table relational output - **Coming soon**
 
+### Currently Supports...
+
+- [x] Mongoose Schema definition - https://mongoosejs.com/
+- [x] Knex Migration scripts - https://knexjs.org
+- [x] TypeScript Types
+- [ ] SQL DDL script (Data-definition language) - **Coming soon**
+- [ ] Validation Code for Libraries like `Yup` or `Joi`
+- [ ] JSON Schemas (for libraries like `ajv`)
+- [ ] Binary Encoders (protobufs, thrift, avro?)
+- [ ] JPA
+- [ ] Ruby/Rails
