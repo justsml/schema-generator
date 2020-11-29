@@ -116,7 +116,7 @@ ${enumData.map(name => `  ${name} = "${name}"`).join(',\n')}
         }${nullable ? ' | null' : ''};`
       }
       if (topType === 'email' || topType === 'string') { return `    ${name}${nullable ? '?' : ''}: string${nullable ? ' | null' : ''};` }
-      if (topType === 'array') { return `    ${name}${nullable ? '?' : ''}: Array<any>${nullable ? ' | null' : ''};` }
+      if (topType === 'array') { return `    ${name}${nullable ? '?' : ''}: any[]${nullable ? ' | null' : ''};` }
       if (topType === 'object') { return `    ${name}${nullable ? '?' : ''}: { [key: string]: any }${nullable ? ' | null' : ''};` }
       if (topType === 'null') return `    ${name}${nullable ? '?' : ''}: string | null${nullable ? ' | null' : ''};`
 

@@ -121,7 +121,9 @@ export default {
         }
 
         if (!nullable) { // likely a not-null type of field
-          appendChain += '.notNull()'
+          appendChain += '.notNullable()'
+        } else {
+          appendChain += '.nullable()'
         }
         if (unique && (topType === 'objectid' || topType === 'uuid' ||
         topType === 'email' || topType === 'string' || topType === 'number')) { // rows have unique values for field
