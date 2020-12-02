@@ -1,6 +1,6 @@
 import camelcase from 'lodash.camelcase'
 import capitalize from 'lodash.capitalize'
-import { getFieldLengthArg, correctForErroneousMaximum } from './common.js'
+import { getFieldLengthArg, correctForErroneousMaximum } from '../../components/SchemaTools/adapters/common.js'
 import debug from 'debug'
 const log = debug('writer:ts')
 

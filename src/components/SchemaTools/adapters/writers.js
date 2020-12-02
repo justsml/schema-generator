@@ -1,6 +1,6 @@
-import typescriptWriter from './writer.typescript.js'
-import mongooseWriter from './writer.mongoose.js'
-import knexWriter from './writer.knex.js'
+import typescriptWriter from './../../../generators/typescript-interfaces/writer.typescript'
+import mongooseWriter from './../../../generators/mongoose-model/writer.mongoose'
+import knexWriter from './../../../generators/knex-postgres/writer.knex'
 
 const writers = {
   typescript: typescriptWriter,
