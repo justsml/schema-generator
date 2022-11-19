@@ -40,7 +40,7 @@
     "react-hook-form": "^4.8.1",
     "react-number-format": "^4.4.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.1",
+    "react-scripts": "5.0.1",
     "react-syntax-highlighter": "12.2.1",
     "schema-analyzer": "^1.2.1",
     "serve": "^11.3.0",
